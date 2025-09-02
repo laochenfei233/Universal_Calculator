@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: 多功能计算器API
+  description: 提供多种计算功能的RESTful API
+  version: 1.0.0
+  contact:
+    name: 开发团队
+    email: dev@calculator.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: 开发环境
+  - url: https://api.calculator.com
+    description: 生产环境
+
+paths:
+  /health:
+    get:
+      summary: 健康检查
+      description: 检查API服务是否正常运行
+      responses:
+        '200':
+          description: 服务健康
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+  
+  /calculate:
+    post:
+      summary: 基础计算
+      description: 执行基础数学运算
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculationRequest'
+      responses:
+        '200':
+          description: 计算成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculationResponse'
+        '400':
+          description: 无效输入
+        '500':
+          description: 服务器错误
+
+components:
+  schemas:
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        timestamp:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        uptime:
+          type: number
+          example: 1234.56
+        memory:
+          type: object
+          properties:
+            rss:
+              type: number
+              example: 12345678
+            heapTotal:
+              type: number
+              example: 23456789
+            heapUsed:
+              type: number
+              example: 1234567
+    
+    CalculationRequest:
+      type: object
+      required:
+        - expression
+      properties:
+        expression:
+          type: string
+          description: 数学表达式
+          example: "2 + 3 * (4 - 1)"
+        type:
+          type: string
+          enum: [basic, scientific]
+          default: basic
+          description: 计算器类型
+        angleMode:
+          type: string
+          enum: [degrees, radians]
+          default: radians
+          description: 角度模式
+    
+    CalculationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        result:
+          type: number
+          example: 11
+        expression:
+          type: string
+          example: "2 + 3 * (4 - 1)"
+        steps:
+          type: array
+          items:
+            type: string
+          example: ["2 + 3 * 3", "2 + 9", "11"]
+        historyId:
+          type: string
+          description: 历史记录ID
+          example: "abc123"

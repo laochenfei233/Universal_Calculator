@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多功能计算器</title>
+    <meta name="description" content="提供基础计算、科学计算、个税计算、房贷计算、BMI计算等多种功能的在线计算器">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="多功能计算器">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180x180.png">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#667eea">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/css/main.css" as="style">
+    <link rel="preload" href="/js/main.js" as="script">
+    <link rel="preload" href="/js/utils.js" as="script">
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/calculators.css">
+    <link rel="stylesheet" href="/css/calculator-layout.css">
+    <link rel="stylesheet" href="/css/footer.css">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="container">
+                <h1 class="logo">多功能计算器</h1>
+                <div class="header-controls">
+                    <button class="theme-toggle" id="theme-toggle" title="切换主题">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="settings-btn" id="settings-btn" title="设置">
+                        <span class="settings-icon">⚙️</span>
+                    </button>
+                    <button class="home-btn" id="home-btn" title="返回首页">
+                        <span class="home-icon">🏠</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <!-- 首页九宫格布局 -->
+            <div id="home-page" class="home-page active">
+                <div class="container">
+                    <div class="page-title">
+                        <h2>选择计算器</h2>
+                        <p>点击下方图标进入相应的计算器</p>
+                    </div>
+                    
+                    <div class="calculator-grid">
+                        <!-- 内置计算器 -->
+                        <div class="calculator-card" data-calculator="basic">
+                            <div class="card-icon">🔢</div>
+                            <h3>基础计算</h3>
+                            <p>基本数学运算</p>
+                        </div>
+                        
+                        <div class="calculator-card" data-calculator="scientific">
+                            <div class="card-icon">🧮</div>
+                            <h3>科学计算</h3>
+                            <p>高级数学函数</p>
+                        </div>
+                        
+                        <div class="calculator-card" data-calculator="tax">
+                            <div class="card-icon">💰</div>
+                            <h3>个税计算</h3>
+                            <p>个人所得税计算</p>
+                        </div>
+                        
+                        <div class="calculator-card" data-calculator="mortgage">
+                            <div class="card-icon">🏠</div>
+                            <h3>房贷计算</h3>
+                            <p>房贷还款计算</p>
+                        </div>
+                        
+                        <div class="calculator-card" data-calculator="bmi">
+                            <div class="card-icon">⚖️</div>
+                            <h3>BMI计算</h3>
+                            <p>身体质量指数</p>
+                        </div>
+                        
+                        <div class="calculator-card" data-calculator="converter">
+                            <div class="card-icon">🔄</div>
+                            <h3>单位换算</h3>
+                            <p>各种单位转换</p>
+                        </div>
+                        
+                        <div class="calculator-card" data-calculator="number">
+                            <div class="card-icon">🔤</div>
+                            <h3>数字转换</h3>
+                            <p>数字大小写转换</p>
+                        </div>
+                        
+                        <div class="calculator-card" data-calculator="relationship">
+                            <div class="card-icon">👪</div>
+                            <h3>称呼计算</h3>
+                            <p>亲属关系称呼</p>
+                        </div>
+                        
+                        <div class="calculator-card" data-calculator="formula">
+                            <div class="card-icon">📐</div>
+                            <h3>公式编辑器</h3>
+                            <p>自定义计算公式</p>
+                        </div>
+                        
+                        <!-- 自定义计算器区域 -->
+                        <div id="custom-calculators-container">
+                            <!-- 自定义计算器将动态添加到这里 -->
+                        </div>
+                        
+                        <!-- 添加自定义计算器按钮 -->
+                        <div class="calculator-card add-calculator" id="add-calculator">
+                            <div class="card-icon">➕</div>
+                            <h3>添加计算器</h3>
+                            <p>创建自定义计算器</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 计算器页面容器 -->
+            <div id="calculator-pages" class="calculator-pages">
+                <div class="container">
+                <!-- 基础计算器 -->
+                <div id="basic-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">🔢</span>
+                            <h2>基础计算器</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon" onclick="basicClearHistory()" title="清除历史">
+                                <span>🗑️</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('basic')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-container">
+                        <div class="calculator-display">
+                            <div class="display-history" id="basic-history"></div>
+                            <input type="text" id="basic-display" class="display" readonly placeholder="0" aria-label="计算结果显示">
+                        </div>
+                        
+                        <div class="basic-calculator-grid">
+                            <!-- 第一行：功能按钮 -->
+                            <button class="btn btn-clear" onclick="basicClear()">
+                                <span class="btn-text">清除</span>
+                            </button>
+                            <button class="btn btn-clear" onclick="basicBackspace()">
+                                <span class="btn-text">删除</span>
+                            </button>
+                            <button class="btn btn-operator" onclick="basicInputOperator('÷')">
+                                <span class="btn-symbol">÷</span>
+                            </button>
+                            <button class="btn btn-operator" onclick="basicInputOperator('×')">
+                                <span class="btn-symbol">×</span>
+                            </button>
+                            
+                            <!-- 第二行：数字7-9和减法 -->
+                            <button class="btn btn-number" onclick="basicInputNumber('7')">
+                                <span class="btn-number-text">7</span>
+                            </button>
+                            <button class="btn btn-number" onclick="basicInputNumber('8')">
+                                <span class="btn-number-text">8</span>
+                            </button>
+                            <button class="btn btn-number" onclick="basicInputNumber('9')">
+                                <span class="btn-number-text">9</span>
+                            </button>
+                            <button class="btn btn-operator" onclick="basicInputOperator('-')">
+                                <span class="btn-symbol">−</span>
+                            </button>
+                            
+                            <!-- 第三行：数字4-6和加法 -->
+                            <button class="btn btn-number" onclick="basicInputNumber('4')">
+                                <span class="btn-number-text">4</span>
+                            </button>
+                            <button class="btn btn-number" onclick="basicInputNumber('5')">
+                                <span class="btn-number-text">5</span>
+                            </button>
+                            <button class="btn btn-number" onclick="basicInputNumber('6')">
+                                <span class="btn-number-text">6</span>
+                            </button>
+                            <button class="btn btn-operator" onclick="basicInputOperator('+')">
+                                <span class="btn-symbol">+</span>
+                            </button>
+                            
+                            <!-- 第四行：数字1-3和等号 -->
+                            <button class="btn btn-number" onclick="basicInputNumber('1')">
+                                <span class="btn-number-text">1</span>
+                            </button>
+                            <button class="btn btn-number" onclick="basicInputNumber('2')">
+                                <span class="btn-number-text">2</span>
+                            </button>
+                            <button class="btn btn-number" onclick="basicInputNumber('3')">
+                                <span class="btn-number-text">3</span>
+                            </button>
+                            <button class="btn btn-equals equals-tall" onclick="basicCalculate()">
+                                <span class="btn-symbol">=</span>
+                            </button>
+                            
+                            <!-- 第五行：0和小数点 -->
+                            <button class="btn btn-number zero-wide" onclick="basicInputNumber('0')">
+                                <span class="btn-number-text">0</span>
+                            </button>
+                            <button class="btn btn-number" onclick="basicInputDecimal()">
+                                <span class="btn-symbol">.</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 科学计算器 -->
+                <div id="scientific-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">🧮</span>
+                            <h2>科学计算器</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon angle-mode-btn" onclick="scientificToggleAngleMode()" title="角度模式切换" id="angle-mode-btn">DEG</button>
+                            <button class="btn btn-icon" onclick="scientificClearHistory()" title="清除历史">
+                                <span>🗑️</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('scientific')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-container scientific-calculator-container">
+                        <div class="calculator-display">
+                            <div class="display-history" id="scientific-history"></div>
+                            <input type="text" id="scientific-display" class="display" readonly placeholder="0" aria-label="科学计算结果显示">
+                        </div>
+                        
+                        <div class="scientific-functions">
+                            <div class="function-row">
+                                <button class="btn-function" onclick="scientificInputFunction('sin')" title="正弦函数">sin</button>
+                                <button class="btn-function" onclick="scientificInputFunction('cos')" title="余弦函数">cos</button>
+                                <button class="btn-function" onclick="scientificInputFunction('tan')" title="正切函数">tan</button>
+                                <button class="btn-function" onclick="scientificInputFunction('log')" title="常用对数">log</button>
+                                <button class="btn-function" onclick="scientificInputFunction('ln')" title="自然对数">ln</button>
+                            </div>
+                            <div class="function-row">
+                                <button class="btn-function" onclick="scientificInputFunction('asin')" title="反正弦">asin</button>
+                                <button class="btn-function" onclick="scientificInputFunction('acos')" title="反余弦">acos</button>
+                                <button class="btn-function" onclick="scientificInputFunction('atan')" title="反正切">atan</button>
+                                <button class="btn-function" onclick="scientificInputFunction('sqrt')" title="平方根">√</button>
+                                <button class="btn-function" onclick="scientificInputFunction('cbrt')" title="立方根">∛</button>
+                            </div>
+                            <div class="function-row">
+                                <button class="btn-constant" onclick="scientificInputConstant('pi')" title="圆周率">π</button>
+                                <button class="btn-constant" onclick="scientificInputConstant('e')" title="自然常数">e</button>
+                                <button class="btn-function" onclick="scientificInputFunction('abs')" title="绝对值">|x|</button>
+                                <button class="btn-function" onclick="scientificInputFunction('factorial')" title="阶乘">n!</button>
+                                <button class="btn-function" onclick="scientificInputFunction('exp')" title="指数函数">exp</button>
+                            </div>
+                            <div class="function-row">
+                                <button class="btn-function" onclick="scientificInputFunction('sinh')" title="双曲正弦">sinh</button>
+                                <button class="btn-function" onclick="scientificInputFunction('cosh')" title="双曲余弦">cosh</button>
+                                <button class="btn-function" onclick="scientificInputFunction('tanh')" title="双曲正切">tanh</button>
+                                <button class="btn-function" onclick="scientificInputFunction('pow')" title="幂运算">x^y</button>
+                                <button class="btn-constant" onclick="scientificInputConstant('phi')" title="黄金比例">φ</button>
+                            </div>
+                        </div>
+                        
+                        <div class="scientific-calculator-grid">
+                            <!-- 第一行 -->
+                            <button class="btn btn-clear" onclick="scientificClear()">清除</button>
+                            <button class="btn btn-operator" onclick="scientificInputParenthesis('(')">(</button>
+                            <button class="btn btn-operator" onclick="scientificInputParenthesis(')')">)</button>
+                            <button class="btn btn-clear" onclick="scientificBackspace()">删除</button>
+                            <button class="btn btn-operator" onclick="scientificInputOperator('÷')">÷</button>
+                            
+                            <!-- 第二行 -->
+                            <button class="btn btn-number" onclick="scientificInputNumber('7')">7</button>
+                            <button class="btn btn-number" onclick="scientificInputNumber('8')">8</button>
+                            <button class="btn btn-number" onclick="scientificInputNumber('9')">9</button>
+                            <button class="btn btn-operator" onclick="scientificInputOperator('×')">×</button>
+                            <button class="btn btn-equals" onclick="scientificCalculate()" rowspan="4">=</button>
+                            
+                            <!-- 第三行 -->
+                            <button class="btn btn-number" onclick="scientificInputNumber('4')">4</button>
+                            <button class="btn btn-number" onclick="scientificInputNumber('5')">5</button>
+                            <button class="btn btn-number" onclick="scientificInputNumber('6')">6</button>
+                            <button class="btn btn-operator" onclick="scientificInputOperator('-')">−</button>
+                            
+                            <!-- 第四行 -->
+                            <button class="btn btn-number" onclick="scientificInputNumber('1')">1</button>
+                            <button class="btn btn-number" onclick="scientificInputNumber('2')">2</button>
+                            <button class="btn btn-number" onclick="scientificInputNumber('3')">3</button>
+                            <button class="btn btn-operator" onclick="scientificInputOperator('+')">+</button>
+                            
+                            <!-- 第五行 -->
+                            <button class="btn btn-number" onclick="scientificInputNumber('0')" colspan="2">0</button>
+                            <button class="btn btn-number" onclick="scientificInputDecimal()">.</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tax-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">💰</span>
+                            <h2>个税计算器</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon" onclick="showTaxRates()" title="税率表">
+                                <span>📊</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('tax')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-card">
+                        <div class="form-group">
+                            <label for="salary">税前工资 (元)</label>
+                            <input type="number" id="salary" placeholder="请输入税前工资">
+                        </div>
+                        <div class="form-group">
+                            <label for="social-insurance">社保 (元)</label>
+                            <input type="number" id="social-insurance" placeholder="社保扣除金额" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="housing-fund">公积金 (元)</label>
+                            <input type="number" id="housing-fund" placeholder="公积金扣除金额" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="special-deduction">专项扣除 (元)</label>
+                            <input type="number" id="special-deduction" placeholder="专项扣除金额" value="0">
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateTax()">计算个税</button>
+                        <div id="tax-result" class="result-panel"></div>
+                    </div>
+                </div>
+
+                <div id="mortgage-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">🏠</span>
+                            <h2>房贷计算器</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon" onclick="showLoanRates()" title="贷款利率参考">
+                                <span>📈</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('mortgage')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-card">
+                        <div class="form-group">
+                            <label for="principal">贷款本金 (元)</label>
+                            <input type="number" id="principal" placeholder="请输入贷款本金">
+                        </div>
+                        <div class="form-group">
+                            <label for="rate">年利率 (%)</label>
+                            <input type="number" id="rate" step="0.01" placeholder="请输入年利率">
+                        </div>
+                        <div class="form-group">
+                            <label for="years">贷款年限</label>
+                            <input type="number" id="years" placeholder="请输入贷款年限">
+                        </div>
+                        <div class="form-group">
+                            <label for="mortgage-type">还款方式</label>
+                            <select id="mortgage-type">
+                                <option value="equal">等额本息</option>
+                                <option value="principal">等额本金</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateMortgage()">计算房贷</button>
+                        <div id="mortgage-result" class="result-panel"></div>
+                    </div>
+                </div>
+
+                <div id="bmi-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">⚖️</span>
+                            <h2>BMI计算器</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon" onclick="showBMIChart()" title="BMI对照表">
+                                <span>📊</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('bmi')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-card">
+                        
+                        <!-- 单位选择 -->
+                        <div class="form-group">
+                            <label>单位制</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="unit-system" value="metric" checked onchange="onUnitSystemChange()">
+                                    <span>公制</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="unit-system" value="imperial" onchange="onUnitSystemChange()">
+                                    <span>英制</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 体重输入 -->
+                        <div class="form-group">
+                            <label for="weight">体重</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="weight" step="0.1" placeholder="请输入体重">
+                                <select id="weight-unit">
+                                    <option value="kg">千克 (kg)</option>
+                                    <option value="lb">磅 (lb)</option>
+                                    <option value="stone">英石 (stone)</option>
+                                    <option value="g">克 (g)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 身高输入 -->
+                        <div class="form-group">
+                            <label for="height">身高</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="height" step="0.1" placeholder="请输入身高">
+                                <select id="height-unit">
+                                    <option value="cm">厘米 (cm)</option>
+                                    <option value="m">米 (m)</option>
+                                    <option value="in">英寸 (in)</option>
+                                    <option value="ft">英尺 (ft)</option>
+                                    <option value="mm">毫米 (mm)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 计算按钮 -->
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="calculateBMI()">计算BMI</button>
+                            <button class="btn btn-secondary" onclick="clearBMIForm()">清除</button>
+                            <button class="btn btn-info" onclick="showBMICategories()">BMI分类</button>
+                        </div>
+
+                        <!-- 结果显示 -->
+                        <div id="bmi-result" class="result-panel"></div>
+
+                        <!-- BMI分类信息 -->
+                        <div id="bmi-categories" class="info-panel" style="display: none;">
+                            <h3>BMI分类标准</h3>
+                            <div id="bmi-categories-content"></div>
+                        </div>
+
+                        <!-- 历史记录 -->
+                        <div class="history-section">
+                            <div class="history-header">
+                                <h3>计算历史</h3>
+                                <div class="history-controls">
+                                    <button class="btn btn-small" onclick="exportBMIHistory()">导出</button>
+                                    <button class="btn btn-small btn-danger" onclick="clearBMIHistory()">清除历史</button>
+                                </div>
+                            </div>
+                            <div id="bmi-history" class="history-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="converter-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">🔄</span>
+                            <h2>单位换算</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon" onclick="showConversionTable()" title="换算表">
+                                <span>📋</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('converter')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-card">
+                        <div class="form-group">
+                            <label for="unit-category">单位类别</label>
+                            <select id="unit-category" onchange="onUnitCategoryChange()">
+                                <option value="">选择单位类别</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="unit-value">数值</label>
+                            <input type="number" id="unit-value" step="any" placeholder="请输入要转换的数值">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="from-unit">源单位</label>
+                                <select id="from-unit">
+                                    <option value="">选择源单位</option>
+                                </select>
+                            </div>
+                            <div class="swap-button-container">
+                                <button type="button" class="btn btn-swap" onclick="swapUnits()" title="交换单位">
+                                    ⇄
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label for="to-unit">目标单位</label>
+                                <select id="to-unit">
+                                    <option value="">选择目标单位</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="convertUnit()">单位换算</button>
+                            <button class="btn btn-secondary" onclick="convertUnitBatch()">批量换算</button>
+                        </div>
+                        <div id="unit-result" class="result-panel"></div>
+                    </div>
+                </div>
+
+                <div id="number-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">🔤</span>
+                            <h2>数字转换</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon" onclick="showNumberExamples()" title="转换示例">
+                                <span>📝</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('number')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-card">
+                        
+                        <!-- 输入模式选择 -->
+                        <div class="form-group">
+                            <label>输入模式</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="input-mode" value="arabic" checked>
+                                    <span>阿拉伯数字</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="input-mode" value="chinese">
+                                    <span>中文数字</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 数字输入 -->
+                        <div class="form-group">
+                            <label for="number-input">输入数字</label>
+                            <input type="text" id="number-input" placeholder="请输入要转换的数字">
+                            <div class="input-hint" id="input-hint">
+                                支持范围：-999,999,999,999,999 ~ 999,999,999,999,999
+                            </div>
+                            <div class="input-error" id="input-error" style="display: none;"></div>
+                        </div>
+
+                        <!-- 转换类型选择 -->
+                        <div class="form-group">
+                            <label for="convert-type">转换类型</label>
+                            <select id="convert-type">
+                                <option value="chinese">中文数字</option>
+                                <option value="financial">财务大写</option>
+                                <option value="arabic">阿拉伯数字</option>
+                                <option value="financial-amount">财务金额格式</option>
+                            </select>
+                        </div>
+
+                        <!-- 操作按钮 -->
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="convertNumber()">转换</button>
+                            <button class="btn btn-secondary" onclick="clearNumberInput()">清空</button>
+                            <button class="btn btn-secondary" onclick="swapNumberConversion()">双向转换</button>
+                        </div>
+
+                        <!-- 结果显示 -->
+                        <div id="number-result" class="result-panel"></div>
+
+                        <!-- 批量转换 -->
+                        <div class="batch-converter" style="margin-top: 20px;">
+                            <h3>批量转换</h3>
+                            <div class="form-group">
+                                <label for="batch-input">批量输入（每行一个数字）</label>
+                                <textarea id="batch-input" rows="4" placeholder="请输入多个数字，每行一个"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="batch-type">批量转换类型</label>
+                                <select id="batch-type">
+                                    <option value="chinese">中文数字</option>
+                                    <option value="financial">财务大写</option>
+                                    <option value="arabic">阿拉伯数字</option>
+                                    <option value="financial-amount">财务金额格式</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="batchConvertNumbers()">批量转换</button>
+                            <div id="batch-result" class="result-panel"></div>
+                        </div>
+
+                        <!-- 历史记录 -->
+                        <div class="history-section" style="margin-top: 20px;">
+                            <h3>转换历史</h3>
+                            <div class="history-controls">
+                                <button class="btn btn-small" onclick="showNumberHistory()">显示历史</button>
+                                <button class="btn btn-small" onclick="clearNumberHistory()">清空历史</button>
+                                <button class="btn btn-small" onclick="exportNumberHistory()">导出历史</button>
+                            </div>
+                            <div id="number-history" class="history-panel" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="relationship-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">👨‍👩‍👧‍👦</span>
+                            <h2>称呼计算器</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon" onclick="showRelationshipTree()" title="关系图谱">
+                                <span>🌳</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('relationship')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-card">
+                        
+                        <!-- 关系计算部分 -->
+                        <div class="calculator-section">
+                            <h3>关系计算</h3>
+                            <div class="form-group">
+                                <label for="relationship-path">关系路径</label>
+                                <input type="text" id="relationship-path" placeholder="例如: 父亲 -> 哥哥 -> 儿子">
+                                <small class="form-help">支持用 -> 、→ 、, 、空格 分隔关系</small>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="relationship-gender">询问者性别</label>
+                                    <select id="relationship-gender">
+                                        <option value="male">男</option>
+                                        <option value="female">女</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="relationship-region">地区</label>
+                                    <select id="relationship-region">
+                                        <option value="standard">标准称呼</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button class="btn btn-primary" id="calculate-relationship">计算称呼</button>
+                                <button class="btn btn-secondary" id="clear-relationship">清除</button>
+                            </div>
+                            
+                            <div id="relationship-result" class="result-panel"></div>
+                        </div>
+
+                        <!-- 关系建议 -->
+                        <div class="calculator-section">
+                            <h4>常用关系</h4>
+                            <div id="relationship-suggestions" class="suggestions-container"></div>
+                        </div>
+
+                        <!-- 反向查询部分 -->
+                        <div class="calculator-section">
+                            <h3>反向查询</h3>
+                            <div class="form-group">
+                                <label for="reverse-relation">称呼</label>
+                                <input type="text" id="reverse-relation" placeholder="例如: 侄子">
+                                <small class="form-help">输入称呼，查找可能的关系路径</small>
+                            </div>
+                            
+                            <button class="btn btn-primary" id="reverse-query">查询路径</button>
+                            <div id="reverse-result" class="result-panel"></div>
+                        </div>
+
+                        <!-- 计算历史 -->
+                        <div class="calculator-section">
+                            <h4>计算历史</h4>
+                            <div id="relationship-history" class="history-container">
+                                <p class="no-history">暂无计算历史</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="formula-calculator" class="calculator-panel">
+                    <div class="calculator-header">
+                        <div class="calculator-title">
+                            <span class="calculator-icon">📐</span>
+                            <h2>图形化公式编辑器</h2>
+                        </div>
+                        <div class="calculator-actions">
+                            <button class="btn btn-icon" onclick="showFormulaTemplates()" title="公式模板">
+                                <span>📋</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="showCalculatorHelp('formula')" title="帮助">
+                                <span>❓</span>
+                            </button>
+                            <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                                <span>🏠</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-card">
+                        
+                        <!-- 标签页导航 -->
+                        <div class="tab-navigation">
+                            <button class="tab-btn active" data-tab="formula-editor">公式编辑器</button>
+                            <button class="tab-btn" data-tab="calculator-generator">计算器生成器</button>
+                        </div>
+
+                        <!-- 公式编辑器标签页 -->
+                        <div id="formula-editor" class="tab-content active">
+                            <!-- 工具栏 -->
+                            <div class="formula-toolbar">
+                                <div class="toolbar-section">
+                                    <h4>数学符号</h4>
+                                    <div class="symbol-palette" id="math-symbols">
+                                        <!-- 数学符号将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <div class="toolbar-section">
+                                    <h4>函数</h4>
+                                    <div class="function-palette" id="math-functions">
+                                        <!-- 数学函数将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <div class="toolbar-section">
+                                    <h4>变量</h4>
+                                    <div class="variable-palette" id="variables">
+                                        <!-- 变量将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 公式构建区域 -->
+                            <div class="formula-builder">
+                                <h3>公式构建区</h3>
+                                <div class="formula-canvas" id="formula-canvas">
+                                    <div class="drop-zone" id="main-drop-zone">
+                                        <p class="drop-hint">拖拽符号和函数到这里构建公式</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- 公式预览 -->
+                                <div class="formula-preview">
+                                    <h4>公式预览</h4>
+                                    <div class="preview-display" id="formula-preview">
+                                        <span class="preview-placeholder">公式将在这里显示</span>
+                                    </div>
+                                    <div class="preview-latex" id="formula-latex" style="display: none;">
+                                        <strong>LaTeX:</strong> <code id="latex-code"></code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 语法验证 -->
+                            <div class="formula-validation">
+                                <div class="validation-status" id="validation-status">
+                                    <span class="status-indicator" id="status-indicator">●</span>
+                                    <span class="status-text" id="status-text">准备就绪</span>
+                                </div>
+                                <div class="validation-errors" id="validation-errors" style="display: none;">
+                                    <!-- 错误信息将在这里显示 -->
+                                </div>
+                            </div>
+
+                            <!-- 操作按钮 -->
+                            <div class="formula-actions">
+                                <button class="btn btn-primary" id="validate-formula">验证公式</button>
+                                <button class="btn btn-secondary" id="clear-formula">清空公式</button>
+                                <button class="btn btn-info" id="save-formula">保存公式</button>
+                                <button class="btn btn-success" id="create-calculator">创建计算器</button>
+                            </div>
+
+                            <!-- 已保存的公式 -->
+                            <div class="saved-formulas">
+                                <h3>已保存的公式</h3>
+                                <div class="formula-list" id="saved-formula-list">
+                                    <p class="no-formulas">暂无保存的公式</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 计算器生成器标签页 -->
+                        <div id="calculator-generator" class="tab-content" style="display: none;">
+                            <div id="custom-calculator-generator">
+                                <!-- 基本信息配置 -->
+                                <div class="generator-section">
+                                    <h3>基本信息</h3>
+                                    <div class="form-group">
+                                        <label for="calculator-name">计算器名称</label>
+                                        <input type="text" id="calculator-name" placeholder="请输入计算器名称">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="calculator-description">描述</label>
+                                        <textarea id="calculator-description" rows="3" placeholder="请输入计算器描述（可选）"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- 输入字段配置 -->
+                                <div class="generator-section">
+                                    <div class="section-header">
+                                        <h3>输入字段配置</h3>
+                                        <button class="btn btn-primary" id="add-input-field">添加字段</button>
+                                    </div>
+                                    <div id="input-fields-config">
+                                        <p class="no-fields">暂无输入字段，点击"添加字段"开始配置</p>
+                                    </div>
+                                </div>
+
+                                <!-- 公式导入 -->
+                                <div class="generator-section">
+                                    <h3>计算公式</h3>
+                                    <div class="formula-import">
+                                        <p>请先在"公式编辑器"标签页中构建计算公式，然后点击下方按钮导入：</p>
+                                        <button class="btn btn-info" onclick="customCalculatorGenerator.getFormulaFromEditor()">从公式编辑器导入</button>
+                                    </div>
+                                </div>
+
+                                <!-- 模板选择 -->
+                                <div class="generator-section">
+                                    <h3>模板选择</h3>
+                                    <div id="template-selection" class="template-grid">
+                                        <!-- 模板选项将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+
+                                <!-- 样式自定义 -->
+                                <div class="generator-section">
+                                    <h3>样式自定义</h3>
+                                    <div class="style-config">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="primary-color">主色调</label>
+                                                <input type="color" id="primary-color" value="#007bff">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="background-color">背景色</label>
+                                                <input type="color" id="background-color" value="#ffffff">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="text-color">文字色</label>
+                                                <input type="color" id="text-color" value="#333333">
+                                            </div>
+                                        </div>
+                                        <div class="theme-presets">
+                                            <label>主题预设：</label>
+                                            <div id="theme-presets">
+                                                <!-- 主题预设按钮将通过JavaScript动态生成 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 预览区域 -->
+                                <div class="generator-section">
+                                    <h3>实时预览</h3>
+                                    <div class="preview-container">
+                                        <div id="calculator-preview" class="calculator-preview">
+                                            <p class="preview-placeholder">配置完成后，预览将在这里显示</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 操作按钮 -->
+                                <div class="generator-actions">
+                                    <button class="btn btn-primary" id="preview-calculator">预览计算器</button>
+                                    <button class="btn btn-success" id="save-calculator">保存计算器</button>
+                                    <button class="btn btn-info" id="export-calculator">导出HTML</button>
+                                    <button class="btn btn-secondary" id="reset-generator">重置配置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2024 多功能计算器. 轻量级计算工具集合.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/message.js"></script>
+    <script src="/js/performance.js"></script>
+    <script src="/js/lazy-loader.js"></script>
+    <script src="/js/network-monitor.js"></script>
+    <script src="/js/touch-enhancements.js"></script>
+    <script src="/js/calculator-helpers.js"></script>
+    <script src="/js/basic-calculator.js"></script>
+    <script src="/js/scientific-calculator.js"></script>
+    <script src="/js/formula-editor.js" defer></script>
+    <script src="/js/custom-calculator-generator.js" defer></script>
+    <script src="/js/settings.js"></script>
+    <script src="/js/calculator-init.js"></script>
+    <script src="/js/main.js"></script>
+    
+    <!-- PWA Installation Prompt -->
+    <script>
+        // PWA安装提示
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // 显示安装提示
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '安装应用';
+            installBtn.className = 'btn btn-primary install-btn';
+            installBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                border-radius: 25px;
+                padding: 10px 20px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    deferredPrompt = null;
+                    installBtn.remove();
+                }
+            });
+            
+            document.body.appendChild(installBtn);
+            
+            // 5秒后自动隐藏
+            setTimeout(() => {
+                if (installBtn.parentNode) {
+                    installBtn.remove();
+                }
+            }, 5000);
+        });
+        
+        // PWA安装成功
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('PWA was installed');
+            showSuccess('应用安装成功！');
+        });
+    </script>
+</body>
+</html>
