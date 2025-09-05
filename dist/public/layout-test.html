@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>布局测试 - 多功能计算器</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .test-info {
+            background: #e3f2fd;
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .test-item {
+            background: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .test-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 480px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h1>布局测试页面</h1>
+        <p>这个页面用于测试九宫格布局的一致性和响应式设计。</p>
+        <p><strong>测试要点：</strong></p>
+        <ul>
+            <li>所有卡片大小应该一致</li>
+            <li>图标应该正确显示，无乱码</li>
+            <li>响应式布局应该正常工作</li>
+            <li>触摸反馈应该流畅</li>
+        </ul>
+    </div>
+
+    <div class="test-info">
+        <h2>原始九宫格布局测试</h2>
+        <div class="calculator-grid">
+            <div class="calculator-card">
+                <div class="card-icon">🔢</div>
+                <h3>基础计算</h3>
+                <p>基本数学运算</p>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="card-icon">🧮</div>
+                <h3>科学计算</h3>
+                <p>高级数学函数</p>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="card-icon">💰</div>
+                <h3>个税计算</h3>
+                <p>个人所得税计算</p>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="card-icon">🏠</div>
+                <h3>房贷计算</h3>
+                <p>房贷还款计算</p>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="card-icon">⚖️</div>
+                <h3>BMI计算</h3>
+                <p>身体质量指数</p>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="card-icon">🔄</div>
+                <h3>单位换算</h3>
+                <p>各种单位转换</p>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="card-icon">🔤</div>
+                <h3>数字转换</h3>
+                <p>数字大小写转换</p>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="card-icon">👪</div>
+                <h3>称呼计算</h3>
+                <p>亲属关系称呼</p>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="card-icon">📐</div>
+                <h3>公式编辑器</h3>
+                <p>自定义计算公式</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-info">
+        <h2>简化测试网格</h2>
+        <div class="test-grid">
+            <div class="test-item">
+                <div class="test-icon">🔢</div>
+                <h4>项目 1</h4>
+                <p>测试内容</p>
+            </div>
+            <div class="test-item">
+                <div class="test-icon">🧮</div>
+                <h4>项目 2</h4>
+                <p>测试内容</p>
+            </div>
+            <div class="test-item">
+                <div class="test-icon">💰</div>
+                <h4>项目 3</h4>
+                <p>测试内容</p>
+            </div>
+            <div class="test-item">
+                <div class="test-icon">🏠</div>
+                <h4>项目 4</h4>
+                <p>测试内容</p>
+            </div>
+            <div class="test-item">
+                <div class="test-icon">⚖️</div>
+                <h4>项目 5</h4>
+                <p>测试内容</p>
+            </div>
+            <div class="test-item">
+                <div class="test-icon">🔄</div>
+                <h4>项目 6</h4>
+                <p>测试内容</p>
+            </div>
+            <div class="test-item">
+                <div class="test-icon">🔤</div>
+                <h4>项目 7</h4>
+                <p>测试内容</p>
+            </div>
+            <div class="test-item">
+                <div class="test-icon">👪</div>
+                <h4>项目 8</h4>
+                <p>测试内容</p>
+            </div>
+            <div class="test-item">
+                <div class="test-icon">📐</div>
+                <h4>项目 9</h4>
+                <p>测试内容</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-info">
+        <h2>设备信息</h2>
+        <div id="device-info">
+            <p><strong>屏幕宽度:</strong> <span id="screen-width"></span>px</p>
+            <p><strong>窗口宽度:</strong> <span id="window-width"></span>px</p>
+            <p><strong>设备像素比:</strong> <span id="pixel-ratio"></span></p>
+            <p><strong>用户代理:</strong> <span id="user-agent"></span></p>
+        </div>
+    </div>
+
+    <div class="test-info">
+        <p><a href="/" style="color: #667eea; text-decoration: none; font-weight: bold;">← 返回主应用</a></p>
+    </div>
+
+    <script>
+        // 显示设备信息
+        function updateDeviceInfo() {
+            document.getElementById('screen-width').textContent = screen.width;
+            document.getElementById('window-width').textContent = window.innerWidth;
+            document.getElementById('pixel-ratio').textContent = window.devicePixelRatio;
+            document.getElementById('user-agent').textContent = navigator.userAgent.substring(0, 100) + '...';
+        }
+
+        // 页面加载时更新信息
+        window.addEventListener('load', updateDeviceInfo);
+        window.addEventListener('resize', updateDeviceInfo);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(updateDeviceInfo, 100);
+        });
+
+        // 添加触摸反馈
+        document.querySelectorAll('.calculator-card, .test-item').forEach(item => {
+            item.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            
+            item.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
+            
+            item.addEventListener('touchcancel', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

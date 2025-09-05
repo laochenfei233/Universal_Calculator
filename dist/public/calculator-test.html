@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>计算器测试 - 多功能计算器</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/calculators.css">
+    <style>
+        body {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .test-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        .test-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .test-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .test-btn:hover {
+            background: #5a6fd8;
+        }
+        .test-result {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            min-height: 50px;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #333;">计算器功能测试</h1>
+    
+    <!-- 基础计算器测试 -->
+    <div class="test-section">
+        <h2 class="test-title">🔢 基础计算器测试</h2>
+        <div class="test-info">
+            <strong>测试说明：</strong>点击下方按钮测试基础计算器的各项功能
+        </div>
+        
+        <div class="calculator-container">
+            <div class="calculator-display">
+                <div class="display-history" id="basic-history"></div>
+                <input type="text" id="basic-display" class="display" readonly placeholder="0">
+            </div>
+            
+            <div class="basic-calculator-grid">
+                <!-- 第一行 -->
+                <button class="btn btn-clear" onclick="basicClear()">清除</button>
+                <button class="btn btn-clear" onclick="basicBackspace()">删除</button>
+                <button class="btn btn-operator" onclick="basicInputOperator('÷')">÷</button>
+                <button class="btn btn-operator" onclick="basicInputOperator('×')">×</button>
+                
+                <!-- 第二行 -->
+                <button class="btn btn-number" onclick="basicInputNumber('7')">7</button>
+                <button class="btn btn-number" onclick="basicInputNumber('8')">8</button>
+                <button class="btn btn-number" onclick="basicInputNumber('9')">9</button>
+                <button class="btn btn-operator" onclick="basicInputOperator('-')">−</button>
+                
+                <!-- 第三行 -->
+                <button class="btn btn-number" onclick="basicInputNumber('4')">4</button>
+                <button class="btn btn-number" onclick="basicInputNumber('5')">5</button>
+                <button class="btn btn-number" onclick="basicInputNumber('6')">6</button>
+                <button class="btn btn-operator" onclick="basicInputOperator('+')">+</button>
+                
+                <!-- 第四行 -->
+                <button class="btn btn-number" onclick="basicInputNumber('1')">1</button>
+                <button class="btn btn-number" onclick="basicInputNumber('2')">2</button>
+                <button class="btn btn-number" onclick="basicInputNumber('3')">3</button>
+                <button class="btn btn-equals equals-tall" onclick="basicCalculate()">=</button>
+                
+                <!-- 第五行 -->
+                <button class="btn btn-number zero-wide" onclick="basicInputNumber('0')">0</button>
+                <button class="btn btn-number" onclick="basicInputDecimal()">.</button>
+            </div>
+        </div>
+        
+        <div class="test-buttons">
+            <button class="test-btn" onclick="testBasicCalculation()">测试基本运算</button>
+            <button class="test-btn" onclick="testBasicDecimal()">测试小数运算</button>
+            <button class="test-btn" onclick="testBasicChain()">测试连续运算</button>
+            <button class="test-btn" onclick="basicClearHistory()">清除历史</button>
+        </div>
+        
+        <div class="test-result" id="basic-test-result">
+            点击上方按钮开始测试...
+        </div>
+    </div>
+    
+    <!-- 科学计算器测试 -->
+    <div class="test-section">
+        <h2 class="test-title">🧮 科学计算器测试</h2>
+        <div class="test-info">
+            <strong>测试说明：</strong>点击下方按钮测试科学计算器的各项功能
+        </div>
+        
+        <div class="calculator-container scientific-calculator-container">
+            <div class="calculator-display">
+                <div class="display-history" id="scientific-history"></div>
+                <input type="text" id="scientific-display" class="display" readonly placeholder="0">
+            </div>
+            
+            <div class="scientific-functions">
+                <div class="function-row">
+                    <button class="btn-function" onclick="scientificInputFunction('sin')">sin</button>
+                    <button class="btn-function" onclick="scientificInputFunction('cos')">cos</button>
+                    <button class="btn-function" onclick="scientificInputFunction('tan')">tan</button>
+                    <button class="btn-function" onclick="scientificInputFunction('log')">log</button>
+                    <button class="btn-function" onclick="scientificInputFunction('ln')">ln</button>
+                </div>
+                <div class="function-row">
+                    <button class="btn-constant" onclick="scientificInputConstant('pi')">π</button>
+                    <button class="btn-constant" onclick="scientificInputConstant('e')">e</button>
+                    <button class="btn-function" onclick="scientificInputFunction('sqrt')">√</button>
+                    <button class="btn-function" onclick="scientificInputFunction('abs')">|x|</button>
+                    <button class="btn-function" onclick="scientificInputFunction('factorial')">n!</button>
+                </div>
+            </div>
+            
+            <div class="scientific-calculator-grid">
+                <!-- 简化的科学计算器按钮 -->
+                <button class="btn btn-clear" onclick="scientificClear()">清除</button>
+                <button class="btn btn-operator" onclick="scientificInputParenthesis('(')">(</button>
+                <button class="btn btn-operator" onclick="scientificInputParenthesis(')')">)</button>
+                <button class="btn btn-clear" onclick="scientificBackspace()">删除</button>
+                
+                <button class="btn btn-number" onclick="scientificInputNumber('7')">7</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('8')">8</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('9')">9</button>
+                <button class="btn btn-operator" onclick="scientificInputOperator('÷')">÷</button>
+                
+                <button class="btn btn-number" onclick="scientificInputNumber('4')">4</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('5')">5</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('6')">6</button>
+                <button class="btn btn-operator" onclick="scientificInputOperator('×')">×</button>
+                
+                <button class="btn btn-number" onclick="scientificInputNumber('1')">1</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('2')">2</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('3')">3</button>
+                <button class="btn btn-operator" onclick="scientificInputOperator('-')">−</button>
+                
+                <button class="btn btn-number" onclick="scientificInputNumber('0')">0</button>
+                <button class="btn btn-number" onclick="scientificInputDecimal()">.</button>
+                <button class="btn btn-equals" onclick="scientificCalculate()">=</button>
+                <button class="btn btn-operator" onclick="scientificInputOperator('+')">+</button>
+            </div>
+        </div>
+        
+        <div class="test-buttons">
+            <button class="test-btn" onclick="testScientificTrig()">测试三角函数</button>
+            <button class="test-btn" onclick="testScientificLog()">测试对数函数</button>
+            <button class="test-btn" onclick="testScientificConstants()">测试常数</button>
+            <button class="test-btn" onclick="scientificToggleAngleMode()">切换角度模式</button>
+            <button class="test-btn" onclick="scientificClearHistory()">清除历史</button>
+        </div>
+        
+        <div class="test-result" id="scientific-test-result">
+            点击上方按钮开始测试...
+        </div>
+    </div>
+    
+    <!-- 角度模式显示 -->
+    <div class="test-section">
+        <h3>角度模式：<span id="angle-mode-display">DEG</span></h3>
+        <button class="test-btn" onclick="scientificToggleAngleMode()">切换角度模式</button>
+    </div>
+
+    <!-- 引入JavaScript -->
+    <script src="/js/utils.js"></script>
+    <script src="/js/message.js"></script>
+    <script src="/js/basic-calculator.js"></script>
+    <script src="/js/scientific-calculator.js"></script>
+    
+    <script>
+        // 测试函数
+        function testBasicCalculation() {
+            basicClear();
+            basicInputNumber('1');
+            basicInputNumber('2');
+            basicInputOperator('+');
+            basicInputNumber('3');
+            basicInputNumber('4');
+            basicCalculate();
+            
+            document.getElementById('basic-test-result').innerHTML = 
+                '测试基本运算: 12 + 34 = ' + document.getElementById('basic-display').value;
+        }
+        
+        function testBasicDecimal() {
+            basicClear();
+            basicInputNumber('3');
+            basicInputDecimal();
+            basicInputNumber('1');
+            basicInputNumber('4');
+            basicInputOperator('×');
+            basicInputNumber('2');
+            basicCalculate();
+            
+            document.getElementById('basic-test-result').innerHTML = 
+                '测试小数运算: 3.14 × 2 = ' + document.getElementById('basic-display').value;
+        }
+        
+        function testBasicChain() {
+            basicClear();
+            basicInputNumber('1');
+            basicInputNumber('0');
+            basicInputOperator('+');
+            basicInputNumber('5');
+            basicInputOperator('×');
+            basicInputNumber('2');
+            basicCalculate();
+            
+            document.getElementById('basic-test-result').innerHTML = 
+                '测试连续运算: 10 + 5 × 2 = ' + document.getElementById('basic-display').value;
+        }
+        
+        function testScientificTrig() {
+            scientificClear();
+            scientificInputFunction('sin');
+            scientificInputNumber('3');
+            scientificInputNumber('0');
+            scientificInputParenthesis(')');
+            scientificCalculate();
+            
+            document.getElementById('scientific-test-result').innerHTML = 
+                '测试三角函数: sin(30°) = ' + document.getElementById('scientific-display').value;
+        }
+        
+        function testScientificLog() {
+            scientificClear();
+            scientificInputFunction('log');
+            scientificInputNumber('1');
+            scientificInputNumber('0');
+            scientificInputNumber('0');
+            scientificInputParenthesis(')');
+            scientificCalculate();
+            
+            document.getElementById('scientific-test-result').innerHTML = 
+                '测试对数函数: log(100) = ' + document.getElementById('scientific-display').value;
+        }
+        
+        function testScientificConstants() {
+            scientificClear();
+            scientificInputConstant('pi');
+            scientificInputOperator('×');
+            scientificInputNumber('2');
+            scientificCalculate();
+            
+            document.getElementById('scientific-test-result').innerHTML = 
+                '测试常数: π × 2 = ' + document.getElementById('scientific-display').value;
+        }
+        
+        // 更新角度模式显示
+        function updateAngleModeDisplay() {
+            const calc = window.scientificCalculatorInstance;
+            if (calc) {
+                document.getElementById('angle-mode-display').textContent = calc.angleMode.toUpperCase();
+            }
+        }
+        
+        // 重写角度模式切换函数以更新显示
+        const originalToggle = window.scientificToggleAngleMode;
+        window.scientificToggleAngleMode = function() {
+            originalToggle();
+            setTimeout(updateAngleModeDisplay, 100);
+        };
+        
+        // 页面加载完成后初始化
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                updateAngleModeDisplay();
+                document.getElementById('basic-test-result').innerHTML = '基础计算器已就绪，可以开始测试';
+                document.getElementById('scientific-test-result').innerHTML = '科学计算器已就绪，可以开始测试';
+            }, 500);
+        });
+    </script>
+</body>
+</html>

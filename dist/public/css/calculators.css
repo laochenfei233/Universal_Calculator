@@ -1,0 +1,550 @@
+/**
+ * 计算器专用样式 - 全新设计
+ */
+
+/* 计算器容器 */
+.calculator-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    position: relative;
+}
+
+body.dark-theme .calculator-container {
+    background: #2d2d2d;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* 计算器显示屏 */
+.calculator-display {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem 1.5rem;
+    color: white;
+    position: relative;
+}
+
+.calculator-display .display {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 300;
+    text-align: right;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    min-height: 60px;
+    resize: none;
+    outline: none;
+}
+
+.calculator-display .display::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.display-history {
+    position: absolute;
+    top: 0.5rem;
+    right: 1.5rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    max-width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 基础计算器按钮网格 */
+.basic-calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: #f0f0f0;
+    padding: 0;
+}
+
+body.dark-theme .basic-calculator-grid {
+    background: #1a1a1a;
+}
+
+.basic-calculator-grid .btn {
+    border: none;
+    padding: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70px;
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 数字按钮 */
+.btn-number {
+    background: #ffffff;
+    color: #333333;
+    font-weight: 400;
+}
+
+.btn-number:hover {
+    background: #f8f9fa;
+}
+
+.btn-number:active {
+    background: #e9ecef;
+    transform: scale(0.98);
+}
+
+body.dark-theme .btn-number {
+    background: #404040;
+    color: #ffffff;
+}
+
+body.dark-theme .btn-number:hover {
+    background: #4a4a4a;
+}
+
+body.dark-theme .btn-number:active {
+    background: #363636;
+}
+
+/* 运算符按钮 */
+.btn-operator {
+    background: #ff9500;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-operator:hover {
+    background: #e6850e;
+}
+
+.btn-operator:active {
+    background: #cc7700;
+    transform: scale(0.98);
+}
+
+/* 等号按钮 */
+.btn-equals {
+    background: #ff9500;
+    color: white;
+    font-weight: 600;
+    grid-row: span 2;
+}
+
+.btn-equals:hover {
+    background: #e6850e;
+}
+
+.btn-equals:active {
+    background: #cc7700;
+    transform: scale(0.98);
+}
+
+/* 清除按钮 */
+.btn-clear {
+    background: #a6a6a6;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-clear:hover {
+    background: #999999;
+}
+
+.btn-clear:active {
+    background: #8c8c8c;
+    transform: scale(0.98);
+}
+
+/* 零按钮 */
+.zero-wide {
+    grid-column: span 2;
+}
+
+/* 按钮文本样式 */
+.btn-number-text {
+    font-size: 1.4em;
+    font-weight: 300;
+}
+
+.btn-symbol {
+    font-size: 1.2em;
+    font-weight: 400;
+}
+
+.btn-text {
+    font-size: 1em;
+    font-weight: 500;
+}
+
+/* 科学计算器样式 */
+.scientific-calculator-container {
+    max-width: 500px;
+}
+
+.scientific-functions {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+body.dark-theme .scientific-functions {
+    background: #333333;
+    border-bottom-color: #555555;
+}
+
+.function-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.function-row:last-child {
+    margin-bottom: 0;
+}
+
+.btn-function,
+.btn-constant {
+    padding: 0.8rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 45px;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-function {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+}
+
+.btn-function:hover {
+    background: #bbdefb;
+    transform: translateY(-1px);
+}
+
+.btn-function:active {
+    background: #90caf9;
+    transform: scale(0.98);
+}
+
+.btn-constant {
+    background: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #ce93d8;
+}
+
+.btn-constant:hover {
+    background: #ce93d8;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-constant:active {
+    background: #ba68c8;
+    transform: scale(0.98);
+}
+
+body.dark-theme .btn-function {
+    background: #1e3a8a;
+    color: #93c5fd;
+    border-color: #3b82f6;
+}
+
+body.dark-theme .btn-constant {
+    background: #581c87;
+    color: #d8b4fe;
+    border-color: #a855f7;
+}
+
+/* 科学计算器按钮网格 */
+.scientific-calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: #f0f0f0;
+}
+
+body.dark-theme .scientific-calculator-grid {
+    background: #1a1a1a;
+}
+
+.scientific-calculator-grid .btn {
+    min-height: 60px;
+    font-size: 1.1rem;
+}
+
+/* 角度模式按钮 */
+.angle-mode-btn {
+    background: #17a2b8;
+    color: white;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    min-width: 50px;
+}
+
+.angle-mode-btn:hover {
+    background: #138496;
+}
+
+.angle-mode-btn:active {
+    background: #117a8b;
+    transform: scale(0.98);
+}
+
+/* 按钮按压效果 */
+.btn.pressed {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* 波纹效果 */
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    pointer-events: none;
+}
+
+.btn:active::after {
+    width: 100%;
+    height: 100%;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .calculator-container {
+        margin: 0 1rem;
+        border-radius: 16px;
+    }
+    
+    .calculator-display {
+        padding: 1.5rem 1rem;
+    }
+    
+    .calculator-display .display {
+        font-size: 2rem;
+        min-height: 50px;
+    }
+    
+    .basic-calculator-grid .btn {
+        padding: 1.2rem;
+        font-size: 1.2rem;
+        min-height: 65px;
+    }
+    
+    .function-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+    
+    .btn-function,
+    .btn-constant {
+        padding: 0.7rem 0.3rem;
+        font-size: 0.8rem;
+        min-height: 50px;
+    }
+    
+    .scientific-calculator-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .scientific-calculator-grid .btn {
+        min-height: 55px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .calculator-display .display {
+        font-size: 1.8rem;
+    }
+    
+    .basic-calculator-grid .btn {
+        padding: 1rem;
+        font-size: 1.1rem;
+        min-height: 60px;
+    }
+    
+    .function-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .btn-function,
+    .btn-constant {
+        font-size: 0.75rem;
+        min-height: 45px;
+    }
+}
+
+/* 横屏模式优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+    .calculator-display {
+        padding: 1rem;
+    }
+    
+    .calculator-display .display {
+        font-size: 1.6rem;
+        min-height: 40px;
+    }
+    
+    .basic-calculator-grid .btn {
+        min-height: 50px;
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+    
+    .function-row {
+        margin-bottom: 0.3rem;
+    }
+    
+    .btn-function,
+    .btn-constant {
+        min-height: 35px;
+        padding: 0.5rem 0.3rem;
+        font-size: 0.7rem;
+    }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+    .btn-number {
+        border: 2px solid #000;
+    }
+    
+    .btn-operator,
+    .btn-equals {
+        border: 2px solid #fff;
+    }
+    
+    .btn-clear {
+        border: 2px solid #fff;
+    }
+}
+
+/* 减少动画模式 */
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+    
+    .btn:hover,
+    .btn:active {
+        transform: none;
+    }
+    
+    .btn::after {
+        transition: none;
+    }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    .btn:hover {
+        transform: none;
+        background: initial;
+    }
+    
+    .btn-number:hover {
+        background: #ffffff;
+    }
+    
+    .btn-operator:hover,
+    .btn-equals:hover {
+        background: #ff9500;
+    }
+    
+    .btn-clear:hover {
+        background: #a6a6a6;
+    }
+    
+    .btn-function:hover {
+        background: #e3f2fd;
+        color: #1976d2;
+        transform: none;
+    }
+    
+    .btn-constant:hover {
+        background: #f3e5f5;
+        color: #7b1fa2;
+        transform: none;
+    }
+    
+    body.dark-theme .btn-number:hover {
+        background: #404040;
+    }
+    
+    body.dark-theme .btn-function:hover {
+        background: #1e3a8a;
+    }
+    
+    body.dark-theme .btn-constant:hover {
+        background: #581c87;
+    }
+}
+
+/* 错误状态 */
+.calculator-display.error .display {
+    color: #ff6b6b;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* 加载状态 */
+.calculator-container.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.calculator-container.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

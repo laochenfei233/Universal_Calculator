@@ -1,0 +1,144 @@
+/**
+ * 底部footer样式
+ * 完全重写以解决显示问题
+ */
+
+/* 基础footer样式 */
+.calculator-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    font-size: 0.85rem;
+    color: #6c757d;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* 深色主题 */
+body.dark-theme .calculator-footer {
+    background-color: #212529;
+    border-top: 1px solid #343a40;
+    color: #adb5bd;
+}
+
+/* 主要内容 */
+.footer-main {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* 操作区域 */
+.footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* 网络状态 */
+.network-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #dc3545;
+    font-size: 0.85rem;
+}
+
+.network-status.online {
+    color: #28a745;
+}
+
+/* 链接样式 */
+.calculator-footer a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 500;
+}
+
+.calculator-footer a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+body.dark-theme .calculator-footer a {
+    color: #6ea8fe;
+}
+
+body.dark-theme .calculator-footer a:hover {
+    color: #9ec5fe;
+}
+
+/* 重试链接 */
+.retry-link {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545 !important;
+}
+
+.retry-link:hover {
+    background-color: rgba(220, 53, 69, 0.2);
+}
+
+body.dark-theme .retry-link {
+    background-color: rgba(220, 53, 69, 0.2);
+}
+
+/* 设置链接 */
+.settings-link {
+    padding: 4px 10px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.settings-link:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .settings-link {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .settings-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 设置图标 */
+.settings-icon {
+    font-size: 0.9em;
+    margin-right: 2px;
+}
+
+/* 响应式调整 */
+@media (max-width: 576px) {
+    .calculator-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .footer-main {
+        margin-bottom: 8px;
+    }
+    
+    .footer-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* 打印模式隐藏 */
+@media print {
+    .calculator-footer {
+        display: none;
+    }
+}

@@ -1,0 +1,2489 @@
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 头部样式 */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.header-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.theme-toggle,
+.settings-btn,
+.home-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover,
+.settings-btn:hover,
+.home-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+}
+
+/* 主内容区域 */
+.main {
+    min-height: calc(100vh - 140px);
+    padding: 2rem 0;
+}
+
+/* 首页样式 */
+.home-page {
+    display: none;
+}
+
+.home-page.active {
+    display: block;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.page-title h2 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.page-title p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* 九宫格布局 */
+.calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.calculator-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.calculator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.calculator-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+    border-color: #667eea;
+}
+
+.calculator-card:hover::before {
+    opacity: 0.05;
+}
+
+.calculator-card:hover .card-icon {
+    transform: scale(1.1);
+}
+
+.calculator-card:hover h3,
+.calculator-card:hover p {
+    color: #667eea;
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+    display: block;
+}
+
+.calculator-card h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.calculator-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+/* 添加计算器卡片特殊样式 */
+.add-calculator {
+    border: 2px dashed #ddd;
+    background: #fafafa;
+}
+
+.add-calculator:hover {
+    border-color: #667eea;
+    background: white;
+}
+
+.add-calculator .card-icon {
+    color: #667eea;
+}
+
+/* 计算器页面容器 */
+.calculator-pages {
+    display: none;
+}
+
+.calculator-pages.active {
+    display: block;
+}
+
+.calculator-panel {
+    display: none;
+}
+
+.calculator-panel.active {
+    display: block;
+}
+
+.calculator-panel .calculator-card {
+    max-width: 600px;
+    margin: 0 auto;
+    cursor: default;
+    text-align: left;
+}
+
+.calculator-panel .calculator-card h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* 结果面板 */
+.result-panel {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    display: none;
+}
+
+.result-panel.show {
+    display: block;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
+}
+
+.result-item:last-child {
+    margin-bottom: 0;
+}
+
+.result-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.result-value {
+    color: #333;
+    font-weight: 700;
+}
+
+/* 占位符样式 */
+.placeholder {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #ddd;
+}
+
+/* 底部样式 */
+.footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto;
+}
+
+/* 错误和成功消息 */
+.message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.message.error {
+    background: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+}
+
+.message.success {
+    background: #efe;
+    color: #363;
+    border: 1px solid #cfc;
+}
+
+/* 暗色主题 */
+body.dark-theme {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
+body.dark-theme .calculator-card {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+body.dark-theme .calculator-card h3 {
+    color: #e0e0e0;
+}
+
+body.dark-theme .calculator-card p {
+    color: #b0b0b0;
+}
+
+body.dark-theme .add-calculator {
+    background: #333;
+    border-color: #555;
+}
+
+body.dark-theme .page-title h2 {
+    color: #e0e0e0;
+}
+
+body.dark-theme .page-title p {
+    color: #b0b0b0;
+}
+
+body.dark-theme .form-group input,
+body.dark-theme .form-group select {
+    background: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body.dark-theme .result-panel {
+    background: #333;
+    color: #e0e0e0;
+}
+
+/* 自定义计算器样式 */
+.custom-calculator-card {
+    position: relative;
+}
+
+.custom-calculator-card .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.custom-calculator-card:hover .delete-btn {
+    opacity: 1;
+}
+
+.custom-calculator-card .delete-btn:hover {
+    background: #ff3742;
+}
+
+/* 设置面板 */
+.settings-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.settings-panel.active {
+    right: 0;
+}
+
+body.dark-theme .settings-panel {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.settings-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .calculator-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .calculator-card {
+        padding: 1.5rem;
+    }
+    
+    .page-title h2 {
+        font-size: 2rem;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .settings-panel {
+        width: 100%;
+        right: -100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .calculator-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .calculator-card {
+        padding: 1rem;
+    }
+    
+    .page-title h2 {
+        font-size: 1.8rem;
+    }
+    
+    .card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .header-controls {
+        gap: 0.3rem;
+    }
+    
+    .theme-toggle,
+    .settings-btn,
+    .home-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+}
+/* 设置面
+板详细样式 */
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+body.dark-theme .settings-header {
+    border-bottom-color: #555;
+}
+
+.settings-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+body.dark-theme .settings-header h3 {
+    color: #e0e0e0;
+}
+
+.close-settings {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-settings:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+body.dark-theme .close-settings {
+    color: #b0b0b0;
+}
+
+body.dark-theme .close-settings:hover {
+    background: #444;
+    color: #e0e0e0;
+}
+
+.setting-group {
+    margin-bottom: 2rem;
+}
+
+.setting-group h4 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+body.dark-theme .setting-group h4 {
+    color: #e0e0e0;
+}
+
+.setting-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    color: #555;
+}
+
+body.dark-theme .setting-group label {
+    color: #b0b0b0;
+}
+
+.setting-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+/* 消息提示样式 */
+.message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    max-width: 400px;
+}
+
+.message {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease;
+    position: relative;
+    padding-right: 3rem;
+}
+
+.message.success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.message.info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+.message.warning {
+    background: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+.message-close {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.message-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 加载动画 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 工具提示 */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 无障碍支持 */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* 焦点样式 */
+*:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+button:focus,
+input:focus,
+select:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+    .calculator-card {
+        border: 2px solid #000;
+    }
+    
+    .btn-primary {
+        background: #000;
+        color: #fff;
+    }
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}/* 计算器头部
+样式 */
+.calculator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    margin-bottom: 0;
+}
+
+.calculator-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.calculator-icon {
+    font-size: 1.5rem;
+}
+
+.calculator-title h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.calculator-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-icon {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 0.4rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+}
+
+/* 计算器面板调整 */
+.calculator-panel .calculator-card {
+    border-radius: 0 0 12px 12px;
+    margin-top: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* 计算器显示屏样式 */
+.calculator-display {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.display {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.5rem;
+    text-align: right;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    background: #f8f9fa;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+body.dark-theme .display {
+    background: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+.display-history {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    font-size: 0.8rem;
+    color: #666;
+    font-family: 'Courier New', monospace;
+}
+
+body.dark-theme .display-history {
+    color: #b0b0b0;
+}
+
+/* 科学计算器特殊样式 */
+.scientific-functions {
+    margin-bottom: 1rem;
+}
+
+.function-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.btn-function,
+.btn-constant {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-function {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+}
+
+.btn-function:hover {
+    background: #bbdefb;
+    transform: translateY(-1px);
+}
+
+.btn-constant {
+    background: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #ce93d8;
+}
+
+.btn-constant:hover {
+    background: #ce93d8;
+    color: white;
+    transform: translateY(-1px);
+}
+
+body.dark-theme .btn-function {
+    background: #1e3a8a;
+    color: #93c5fd;
+    border-color: #3b82f6;
+}
+
+body.dark-theme .btn-constant {
+    background: #581c87;
+    color: #d8b4fe;
+    border-color: #a855f7;
+}
+
+/* 计算器按钮网格 */
+.calculator-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.basic-calculator-grid {
+    grid-template-areas: 
+        "clear delete divide multiply"
+        "seven eight nine minus"
+        "four five six plus"
+        "one two three equals"
+        "zero zero dot equals";
+    grid-template-rows: repeat(5, 1fr);
+}
+
+.scientific-buttons {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.calculator-buttons .btn {
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 按钮内容样式 */
+.btn-text,
+.btn-symbol,
+.btn-number-text {
+    display: block;
+    line-height: 1;
+}
+
+.btn-number-text {
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.btn-symbol {
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.btn-text {
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+/* 特殊按钮布局 */
+.zero-wide {
+    grid-column: span 2;
+}
+
+.equals-tall {
+    grid-row: span 2;
+}
+
+.btn-number {
+    background: #ffffff;
+    color: #333;
+    border: 2px solid #e1e5e9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-number:hover {
+    background: #f8f9fa;
+    border-color: #667eea;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-number:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.btn-operator {
+    background: #667eea;
+    color: white;
+    border: 2px solid #667eea;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.btn-operator:hover {
+    background: #5a6fd8;
+    border-color: #5a6fd8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+}
+
+.btn-operator:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(102, 126, 234, 0.3);
+}
+
+.btn-equals {
+    background: #28a745;
+    color: white;
+    border: 2px solid #28a745;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.btn-equals:hover {
+    background: #218838;
+    border-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
+
+.btn-equals:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(40, 167, 69, 0.3);
+}
+
+.btn-clear {
+    background: #dc3545;
+    color: white;
+    border: 2px solid #dc3545;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.btn-clear:hover {
+    background: #c82333;
+    border-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+}
+
+.btn-clear:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(220, 53, 69, 0.3);
+}
+
+/* 暗色主题按钮 */
+body.dark-theme .btn-number {
+    background: #444;
+    color: #e0e0e0;
+    border-color: #666;
+}
+
+body.dark-theme .btn-number:hover {
+    background: #555;
+}
+
+/* 计算器快捷键提示 */
+.calculator-shortcuts {
+    text-align: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+body.dark-theme .calculator-shortcuts {
+    border-top-color: #555;
+}
+
+.calculator-shortcuts small {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+body.dark-theme .calculator-shortcuts small {
+    color: #b0b0b0;
+}
+
+/* 特殊按钮布局 */
+.btn[colspan="2"] {
+    grid-column: span 2;
+}
+
+.btn[rowspan="2"] {
+    grid-row: span 2;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .header {
+        padding: 0.75rem 0;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .header-controls {
+        gap: 0.3rem;
+    }
+    
+    .theme-toggle,
+    .settings-btn,
+    .home-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    
+    .main {
+        padding: 1rem 0;
+    }
+    
+    .page-title h2 {
+        font-size: 2rem;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem;
+        padding: 0 0.5rem;
+    }
+    
+    .calculator-card {
+        padding: 1.8rem 1.2rem;
+        min-height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .card-icon {
+        font-size: 2.8rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .calculator-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .calculator-card p {
+        font-size: 0.9rem;
+        line-height: 1.3;
+    }
+    
+    /* 增强触摸反馈 */
+    .calculator-card:active {
+        transform: translateY(-4px) scale(0.98);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    /* 计算器界面优化 */
+    .calculator-header {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .calculator-title h2 {
+        font-size: 1.2rem;
+    }
+    
+    .calculator-icon {
+        font-size: 1.3rem;
+    }
+    
+    .btn-icon {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+        padding: 0.3rem;
+    }
+    
+    .calculator-card {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .display {
+        font-size: 1.4rem;
+        padding: 1rem;
+        min-height: 60px;
+    }
+    
+    /* 科学计算器函数按钮 */
+    .function-row {
+        gap: 0.4rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .btn-function,
+    .btn-constant {
+        padding: 0.6rem 0.4rem;
+        font-size: 0.8rem;
+        min-height: 40px;
+    }
+    
+    /* 计算器按钮优化 */
+    .calculator-buttons {
+        gap: 0.5rem;
+    }
+    
+    .calculator-buttons .btn {
+        padding: 0.8rem;
+        font-size: 1rem;
+        min-height: 55px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+}
+
+/* 小屏幕手机优化 */
+@media (max-width: 480px) {
+    .calculator-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .calculator-card {
+        padding: 1.2rem 0.8rem;
+    }
+    
+    .card-icon {
+        font-size: 2.2rem;
+    }
+    
+    .calculator-header {
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .calculator-title {
+        flex-direction: column;
+        gap: 0.3rem;
+        text-align: center;
+    }
+    
+    .calculator-actions {
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+    
+    .calculator-card {
+        margin: 0 0.5rem;
+        padding: 1rem;
+    }
+    
+    .display {
+        font-size: 1.6rem;
+        padding: 1.2rem 1rem;
+        min-height: 70px;
+        text-align: right;
+    }
+    
+    /* 科学计算器函数按钮 - 竖屏布局 */
+    .function-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-function,
+    .btn-constant {
+        padding: 0.7rem 0.3rem;
+        font-size: 0.75rem;
+        min-height: 45px;
+    }
+    
+    /* 计算器按钮 - 更大的触摸区域 */
+    .calculator-buttons {
+        gap: 0.6rem;
+    }
+    
+    .calculator-buttons .btn {
+        padding: 1rem;
+        font-size: 1.1rem;
+        min-height: 60px;
+        border-radius: 15px;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* 特殊按钮样式 */
+    .btn-number {
+        background: #ffffff;
+        border: 2px solid #e1e5e9;
+    }
+    
+    .btn-number:hover,
+    .btn-number:active {
+        background: #f8f9fa;
+        border-color: #667eea;
+        transform: scale(0.98);
+    }
+    
+    .btn-operator {
+        background: #667eea;
+        color: white;
+        border: 2px solid #667eea;
+    }
+    
+    .btn-operator:hover,
+    .btn-operator:active {
+        background: #5a6fd8;
+        transform: scale(0.98);
+    }
+    
+    .btn-equals {
+        background: #28a745;
+        color: white;
+        border: 2px solid #28a745;
+    }
+    
+    .btn-equals:hover,
+    .btn-equals:active {
+        background: #218838;
+        transform: scale(0.98);
+    }
+    
+    .btn-clear {
+        background: #dc3545;
+        color: white;
+        border: 2px solid #dc3545;
+    }
+    
+    .btn-clear:hover,
+    .btn-clear:active {
+        background: #c82333;
+        transform: scale(0.98);
+    }
+}
+
+/* 横屏模式优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+    .main {
+        padding: 0.5rem 0;
+    }
+    
+    .calculator-header {
+        padding: 0.5rem 1rem;
+    }
+    
+    .calculator-card {
+        padding: 1rem;
+    }
+    
+    .display {
+        min-height: 50px;
+        font-size: 1.3rem;
+        padding: 0.8rem;
+    }
+    
+    .calculator-buttons .btn {
+        min-height: 45px;
+        padding: 0.6rem;
+        font-size: 0.95rem;
+    }
+    
+    .function-row {
+        margin-bottom: 0.3rem;
+    }
+    
+    .btn-function,
+    .btn-constant {
+        min-height: 35px;
+        padding: 0.5rem 0.3rem;
+        font-size: 0.7rem;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+    .calculator-buttons .btn {
+        font-size: 1rem;
+        min-height: 55px;
+        padding: 0.8rem;
+    }
+    
+    .display {
+        font-size: 1.4rem;
+        min-height: 65px;
+    }
+    
+    .function-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .btn-function,
+    .btn-constant {
+        font-size: 0.7rem;
+        padding: 0.6rem 0.2rem;
+    }
+}/* 模态框
+样式 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    max-height: 80vh;
+    width: 90%;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+body.dark-theme .modal-content {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #eee;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+body.dark-theme .modal-header {
+    border-bottom-color: #555;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+    padding: 2rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.modal-body h4 {
+    color: #333;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.modal-body h4:first-child {
+    margin-top: 0;
+}
+
+body.dark-theme .modal-body h4 {
+    color: #e0e0e0;
+}
+
+.modal-body ul, .modal-body ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.modal-body li {
+    margin-bottom: 0.3rem;
+    line-height: 1.5;
+}
+
+.modal-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.modal-body th,
+.modal-body td {
+    padding: 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+body.dark-theme .modal-body th,
+body.dark-theme .modal-body td {
+    border-bottom-color: #555;
+}
+
+.modal-body th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+body.dark-theme .modal-body th {
+    background: #333;
+    color: #e0e0e0;
+}
+
+.modal-body code {
+    background: #f1f3f4;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+body.dark-theme .modal-body code {
+    background: #444;
+    color: #e0e0e0;
+}
+
+.modal-body kbd {
+    background: #333;
+    color: white;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.8em;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.modal-footer {
+    padding: 1rem 2rem;
+    border-top: 1px solid #eee;
+    text-align: right;
+    background: #f8f9fa;
+}
+
+body.dark-theme .modal-footer {
+    border-top-color: #555;
+    background: #333;
+}
+
+/* 特殊表格样式 */
+.tax-rate-table tr:nth-child(odd) {
+    background: #f9f9f9;
+}
+
+body.dark-theme .tax-rate-table tr:nth-child(odd) {
+    background: #3a3a3a;
+}
+
+.bmi-chart .underweight {
+    background: #e3f2fd;
+}
+
+.bmi-chart .normal {
+    background: #e8f5e8;
+}
+
+.bmi-chart .overweight {
+    background: #fff3e0;
+}
+
+.bmi-chart .obese {
+    background: #ffebee;
+}
+
+body.dark-theme .bmi-chart .underweight {
+    background: #1e3a8a;
+}
+
+body.dark-theme .bmi-chart .normal {
+    background: #166534;
+}
+
+body.dark-theme .bmi-chart .overweight {
+    background: #92400e;
+}
+
+body.dark-theme .bmi-chart .obese {
+    background: #991b1b;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 响应式模态框 */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+    
+    .modal-body {
+        max-height: 70vh;
+    }
+    
+    .modal-body table {
+        font-size: 0.8rem;
+    }
+    
+    .modal-body th,
+    .modal-body td {
+        padding: 0.3rem;
+    }
+}
+
+/* 键盘导航支持 */
+.modal-content:focus {
+    outline: none;
+}
+
+.modal-close:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}/*
+ 懒加载和性能优化样式 */
+
+/* 图片懒加载 */
+img.lazy {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+img.loaded {
+    opacity: 1;
+}
+
+img.fade-in {
+    animation: fadeInImage 0.5s ease;
+}
+
+@keyframes fadeInImage {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 组件懒加载 */
+.lazy-component {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+    position: relative;
+}
+
+body.dark-theme .lazy-component {
+    background: #333;
+}
+
+.lazy-component::before {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.lazy-component.loaded::before {
+    display: none;
+}
+
+.lazy-component.load-error {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.lazy-component.load-error::before {
+    display: none;
+}
+
+.lazy-component.load-error::after {
+    content: '加载失败';
+    font-size: 0.9rem;
+}
+
+/* PWA安装按钮 */
+.install-btn {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+}
+
+/* 离线指示器 */
+.offline-indicator {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff9800;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    z-index: 1001;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 性能监控面板 */
+.performance-panel {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-family: monospace;
+    z-index: 1000;
+    max-width: 300px;
+    display: none;
+}
+
+.performance-panel.show {
+    display: block;
+}
+
+.performance-panel h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.performance-panel .metric {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+}
+
+.performance-panel .metric-value {
+    font-weight: bold;
+}
+
+/* 预加载指示器 */
+.preload-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 2000;
+    display: none;
+}
+
+body.dark-theme .preload-indicator {
+    background: rgba(45, 45, 45, 0.95);
+    color: #e0e0e0;
+}
+
+.preload-indicator.show {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.preload-indicator .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem auto;
+}
+
+.preload-indicator p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+body.dark-theme .preload-indicator p {
+    color: #b0b0b0;
+}
+
+/* 缓存状态指示器 */
+.cache-status {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: #4caf50;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cache-status.show {
+    opacity: 1;
+}
+
+.cache-status.error {
+    background: #f44336;
+}
+
+.cache-status.warning {
+    background: #ff9800;
+}
+
+/* 网络状态样式 */
+body.offline {
+    filter: grayscale(0.3);
+}
+
+body.offline .calculator-card {
+    border-left: 4px solid #ff9800;
+}
+
+body.offline .btn-primary {
+    background: #757575;
+    cursor: not-allowed;
+}
+
+body.offline .btn-primary:hover {
+    background: #757575;
+    transform: none;
+}
+
+/* 优化的滚动条 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #333;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: #666;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* 减少动画的媒体查询 */
+@media (prefers-reduced-motion: reduce) {
+    .lazy-component::before,
+    .spinner,
+    .loading {
+        animation: none;
+    }
+    
+    img.fade-in {
+        animation: none;
+    }
+    
+    .install-btn {
+        animation: none;
+    }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+    .lazy-component {
+        border: 2px solid #000;
+    }
+    
+    .offline-indicator {
+        border: 2px solid #000;
+    }
+    
+    .performance-panel {
+        border: 2px solid #fff;
+    }
+}/* 触摸设
+备优化 */
+@media (hover: none) and (pointer: coarse) {
+    /* 移除hover效果，使用active状态 */
+    .calculator-buttons .btn:hover {
+        transform: none;
+        box-shadow: initial;
+    }
+    
+    .btn-number:hover {
+        background: #ffffff;
+        border-color: #e1e5e9;
+    }
+    
+    .btn-operator:hover {
+        background: #667eea;
+        border-color: #667eea;
+    }
+    
+    .btn-equals:hover {
+        background: #28a745;
+        border-color: #28a745;
+    }
+    
+    .btn-clear:hover {
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    /* 增强触摸反馈 */
+    .calculator-buttons .btn:active {
+        transform: scale(0.92);
+        transition: transform 0.1s ease;
+    }
+    
+    /* 增大触摸区域 */
+    .calculator-buttons .btn {
+        min-height: 60px;
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .btn-number-text {
+        font-size: 1.3em;
+    }
+    
+    .btn-symbol {
+        font-size: 1.2em;
+    }
+}
+
+/* iPhone和小屏幕设备特殊优化 */
+@media (max-width: 414px) {
+    .calculator-buttons {
+        gap: 0.8rem;
+        padding: 0 0.5rem;
+    }
+    
+    .calculator-buttons .btn {
+        min-height: 65px;
+        border-radius: 16px;
+        font-size: 1.2rem;
+    }
+    
+    .btn-number-text {
+        font-size: 1.4em;
+    }
+    
+    .btn-symbol {
+        font-size: 1.3em;
+    }
+    
+    .btn-text {
+        font-size: 1em;
+    }
+    
+    .display {
+        font-size: 1.8rem;
+        min-height: 80px;
+        padding: 1.5rem 1rem;
+    }
+}
+
+/* 超大屏幕手机优化 */
+@media (min-width: 415px) and (max-width: 768px) {
+    .calculator-buttons .btn {
+        min-height: 70px;
+        font-size: 1.3rem;
+    }
+    
+    .btn-number-text {
+        font-size: 1.5em;
+    }
+    
+    .display {
+        font-size: 2rem;
+        min-height: 85px;
+    }
+}
+
+/* 暗色主题下的按钮优化 */
+body.dark-theme .btn-number {
+    background: #444;
+    color: #e0e0e0;
+    border-color: #666;
+}
+
+body.dark-theme .btn-number:hover {
+    background: #555;
+    border-color: #667eea;
+}
+
+body.dark-theme .btn-number:active {
+    background: #333;
+}
+
+/* 按钮按压动画 */
+@keyframes buttonPress {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.calculator-buttons .btn.pressed {
+    animation: buttonPress 0.15s ease;
+}
+
+/* 长按效果 */
+.calculator-buttons .btn:active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .calculator-buttons .btn:active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 防止文本选择 */
+.calculator-buttons .btn,
+.calculator-buttons .btn * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* 改善触摸滚动 */
+.calculator-card {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+}
+
+/* 优化焦点样式 */
+.calculator-buttons .btn:focus {
+    outline: 3px solid rgba(102, 126, 234, 0.5);
+    outline-offset: 2px;
+}
+
+/* 禁用双击缩放 */
+.calculator-buttons .btn {
+    touch-action: manipulation;
+}
+
+/* 优化显示屏的触摸体验 */
+.display {
+    touch-action: manipulation;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+/* 添加触觉反馈提示 */
+.calculator-buttons .btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    pointer-events: none;
+}
+
+.calculator-buttons .btn:active::after {
+    width: 100%;
+    height: 100%;
+}
+
+/* 科学计算器移动端优化 */
+@media (max-width: 480px) {
+    .scientific-functions {
+        margin-bottom: 0.8rem;
+    }
+    
+    .function-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-function,
+    .btn-constant {
+        min-height: 50px;
+        padding: 0.8rem 0.4rem;
+        font-size: 0.8rem;
+        border-radius: 12px;
+    }
+    
+    .btn-function:active,
+    .btn-constant:active {
+        transform: scale(0.95);
+    }
+}/*
+ 移动端专用优化 */
+
+/* 改善移动端滚动性能 */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 优化移动端字体渲染 */
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 16px; /* 防止iOS自动缩放 */
+    }
+}
+
+/* 改善移动端输入体验 */
+input, select, textarea {
+    font-size: 16px; /* 防止iOS缩放 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* 移动端专用的计算器显示屏优化 */
+@media (max-width: 768px) {
+    .display {
+        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', 'Courier New', monospace;
+        letter-spacing: 0.5px;
+        line-height: 1.2;
+    }
+}
+
+/* 优化移动端的模态框 */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 10px;
+        max-height: calc(100vh - 20px);
+        border-radius: 16px;
+    }
+    
+    .modal-header {
+        padding: 1rem 1.5rem;
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+        max-height: calc(100vh - 140px);
+    }
+    
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        border-radius: 0 0 16px 16px;
+    }
+}
+
+/* 移动端安全区域适配 */
+@supports (padding: max(0px)) {
+    .header {
+        padding-top: max(1rem, env(safe-area-inset-top));
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+    
+    .main {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+        padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    }
+    
+    .calculator-card {
+        margin-left: max(1rem, env(safe-area-inset-left) + 1rem);
+        margin-right: max(1rem, env(safe-area-inset-right) + 1rem);
+    }
+}
+
+/* 改善移动端的焦点状态 */
+@media (max-width: 768px) {
+    .calculator-buttons .btn:focus {
+        outline: 3px solid rgba(102, 126, 234, 0.6);
+        outline-offset: 3px;
+    }
+}
+
+/* 移动端键盘弹出时的优化 */
+.keyboard-open {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.keyboard-open .main {
+    padding-bottom: 0;
+}
+
+.keyboard-open .calculator-card {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+/* 横屏模式下的特殊优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+    .page-title {
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-title h2 {
+        font-size: 1.8rem;
+    }
+    
+    .calculator-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    
+    .calculator-card {
+        padding: 1.2rem 1rem;
+        min-height: 120px;
+    }
+    
+    .card-icon {
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .calculator-card h3 {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .calculator-card p {
+        font-size: 0.8rem;
+    }
+}
+
+/* 超小屏幕的特殊处理 */
+@media (max-width: 320px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .calculator-grid {
+        gap: 0.8rem;
+    }
+    
+    .calculator-card {
+        padding: 1.5rem 1rem;
+        min-height: 130px;
+    }
+    
+    .card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .calculator-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .calculator-card p {
+        font-size: 0.85rem;
+    }
+    
+    .calculator-buttons .btn {
+        min-height: 58px;
+        font-size: 1rem;
+    }
+    
+    .display {
+        font-size: 1.6rem;
+        min-height: 75px;
+    }
+}
+
+/* 高分辨率屏幕优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .calculator-buttons .btn {
+        border-width: 0.5px;
+    }
+    
+    .calculator-card {
+        border-width: 0.5px;
+    }
+}
+
+/* 减少动画的用户偏好 */
+@media (prefers-reduced-motion: reduce) {
+    .calculator-card {
+        transition: none;
+    }
+    
+    .calculator-buttons .btn {
+        transition: none;
+    }
+    
+    .calculator-card:hover,
+    .calculator-card:active {
+        transform: none;
+    }
+    
+    .calculator-buttons .btn:hover,
+    .calculator-buttons .btn:active {
+        transform: none;
+    }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+    .calculator-card {
+        border: 3px solid #000;
+    }
+    
+    .calculator-buttons .btn {
+        border-width: 2px;
+    }
+    
+    .btn-number {
+        border-color: #000;
+    }
+    
+    .display {
+        border: 3px solid #000;
+    }
+}
+
+/* 暗色模式偏好 */
+@media (prefers-color-scheme: dark) {
+    body:not(.theme-set) {
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+    }
+    
+    body:not(.theme-set) .calculator-card {
+        background: #2d2d2d;
+        color: #e0e0e0;
+    }
+}
+
+/* 打印样式 */
+@media print {
+    .header-controls,
+    .calculator-actions,
+    .settings-panel,
+    .modal-overlay {
+        display: none !important;
+    }
+    
+    .calculator-card {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .calculator-buttons {
+        display: none;
+    }
+}
