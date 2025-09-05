@@ -2,12 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "package.json",
+      "src": "dist/server.js",
       "use": "@vercel/node",
       "config": {
         "maxLambdaSize": "15mb",
         "includeFiles": [
-          "dist/**",
           "public/**",
           "config/**"
         ]
@@ -21,10 +20,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "public/$1",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
+      "dest": "dist/server.js"
     }
   ]
 }

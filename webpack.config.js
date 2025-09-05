@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   target: 'node', // 因为这是一个Node.js应用
@@ -33,5 +34,13 @@ module.exports = {
     .reduce((acc, mod) => {
       acc[mod] = `commonjs ${mod}`;
       return acc;
-    }, {})
+    }, {}),
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: 'public', to: 'public' },
+        { from: 'config', to: 'config' }
+      ],
+    }),
+  ]
 };

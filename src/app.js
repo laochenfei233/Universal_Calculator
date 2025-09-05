@@ -46,14 +46,23 @@ app.use(inputValidation);
 app.use('/api', enhancedRateLimit);
 
 // 静态文件服务
-app.use(express.static(path.join(__dirname, '../public')));
+// 根据环境判断静态文件路径
+const staticPath = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, 'public') 
+  : path.join(__dirname, '../public');
+
+app.use(express.static(staticPath));
 
 // API路由
 app.use('/api', apiRoutes);
 
 // 根路径重定向到静态文件
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+  const indexPath = process.env.NODE_ENV === 'production'
+    ? path.join(__dirname, 'public', 'index.html')
+    : path.join(__dirname, '../public', 'index.html');
+  
+  res.sendFile(indexPath);
 });
 
 // 404处理
