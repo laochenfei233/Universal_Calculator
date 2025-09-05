@@ -10,6 +10,21 @@ module.exports = {
     filename: 'api/index.js', // 输出文件名，放在api目录下
     clean: true // 每次构建前清理输出目录
   },
+  // 排除public目录下的文件
+  externals: [
+    fs.readdirSync('node_modules')
+      .filter(x => !x.includes('.bin'))
+      .reduce((acc, mod) => {
+        acc[mod] = `commonjs ${mod}`;
+        return acc;
+      }, {}),
+    function({ request }, callback) {
+      if (/^\.\/public/.test(request)) {
+        return callback(null, 'commonjs ' + request);
+      }
+      callback();
+    }
+  ],
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   module: {
     rules: [
@@ -38,10 +53,21 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: 'public', to: 'public' },
+        { 
+          from: 'public', 
+          to: 'public',
+          noErrorOnMissing: true,
+          globOptions: {
+            ignore: ['**/*.js'] // 忽略JS文件，避免重复处理
+          }
+        },
         { from: 'config', to: 'config' },
         { from: 'src/app.js', to: 'api/app.js' }
       ],
     }),
-  ]
+  ],
+  // 禁用对public目录下JS文件的处理
+  module: {
+    noParse: [/public\/js\/.*\.js$/]
+  }
 };

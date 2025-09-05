@@ -236,8 +236,9 @@ async function copyToClipboard(text) {
         console.error('复制失败:', err);
         showMessage('复制失败', 'error');
     }
-}/
-/ Number converter utility functions
+}
+
+// Number converter utility functions
 function copyToClipboard(elementId) {
     const element = document.getElementById(elementId);
     if (element) {
