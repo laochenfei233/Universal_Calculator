@@ -7,7 +7,7 @@ module.exports = {
   entry: './src/server.js', // 入口文件
   output: {
     path: path.resolve(__dirname, 'dist'), // 输出目录
-    filename: 'server.js', // 输出文件名
+    filename: 'api/index.js', // 输出文件名，放在api目录下
     clean: true // 每次构建前清理输出目录
   },
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -39,7 +39,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: 'public', to: 'public' },
-        { from: 'config', to: 'config' }
+        { from: 'config', to: 'config' },
+        { from: 'src/app.js', to: 'api/app.js' }
       ],
     }),
   ]
