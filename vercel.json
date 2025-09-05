@@ -2,12 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/server.js",
+      "src": "package.json",
       "use": "@vercel/node",
       "config": {
         "maxLambdaSize": "15mb",
         "includeFiles": [
-          "src/**",
+          "dist/**",
           "public/**",
           "config/**"
         ]
@@ -17,7 +17,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "src/server.js"
+      "dest": "dist/server.js"
     },
     {
       "src": "/(.*)",
