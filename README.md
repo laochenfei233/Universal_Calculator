@@ -47,7 +47,7 @@ npm run build
 
 ### 1. Vercel 部署
 **一键部署**  
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/universal_calculator)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/laochenfei233/universal_calculator&project-name=universal_calculator&repo-name=universal_calculator)
 
 **手动部署**
 ```bash
