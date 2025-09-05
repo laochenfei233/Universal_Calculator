@@ -9,8 +9,8 @@
     "build": "webpack --mode production",
     "vercel-build": "npm run build && vercel --prod",
     "test": "jest",
-    "docker:build": "docker build -t universal-calculator .",
-    "docker:run": "docker run -p 3000:3000 universal-calculator",
+    "docker:build": "docker build -t universal_calculator .",
+    "docker:run": "docker run -p 3000:3000 universal_calculator",
     "docker:deploy": "npm run docker:build && npm run docker:run"
   },
   "dependencies": {

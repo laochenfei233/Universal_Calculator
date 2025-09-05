@@ -1,4 +1,4 @@
-# Universal Calculator 多功能计算器
+# universal calculator 多功能计算器
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.x-green)
@@ -29,7 +29,7 @@
 ### 本地开发
 ```bash
 # 克隆项目
-git clone https://github.com/yourusername/Universal_Calculator.git
+git clone https://github.com/yourusername/universal_calculator.git
 
 # 安装依赖
 npm install
@@ -47,7 +47,7 @@ npm run build
 
 ### 1. Vercel 部署
 **一键部署**  
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/Universal_Calculator)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/universal_calculator)
 
 **手动部署**
 ```bash
@@ -61,10 +61,10 @@ npm run vercel-build
 ### 2. Docker 部署
 ```bash
 # 构建镜像
-docker build -t universal-calculator .
+docker build -t universal_calculator .
 
 # 运行容器
-docker run -p 3000:3000 universal-calculator
+docker run -p 3000:3000 universal_calculator
 
 # 或使用快捷命令
 npm run docker:deploy

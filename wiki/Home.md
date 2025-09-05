@@ -21,5 +21,5 @@
 - 自定义公式编辑器
 
 ## 快速链接
-- [GitHub仓库](https://github.com/yourusername/Universal_Calculator)
+- [GitHub仓库](https://github.com/yourusername/universal_calculator)
 - [在线演示](https://calculator.example.com)
