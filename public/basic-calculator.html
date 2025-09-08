@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基础计算器</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/calculator-layout.css">
+    <link rel="stylesheet" href="/css/calculators.css">
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-panel">
+            <div class="calculator-header">
+                <div class="calculator-title">
+                    <span class="calculator-icon">🔢</span>
+                    <h2>基础计算器</h2>
+                </div>
+                <div class="calculator-actions">
+                    <button class="btn btn-icon" onclick="showCalculatorHelp('basic')" title="帮助">
+                        <span>❓</span>
+                    </button>
+                    <a href="/" class="btn btn-icon" title="返回首页">
+                        <span>🏠</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="calculator-display">
+                <div class="display-history" id="basic-history"></div>
+                <input type="text" id="basic-display" class="display" readonly placeholder="0" aria-label="计算结果显示">
+            </div>
+            
+            <div class="basic-calculator-grid">
+                <!-- 第一行：功能按钮 -->
+                <button class="btn btn-clear" onclick="basicClear()">
+                    <span class="btn-text">清除</span>
+                </button>
+                <button class="btn btn-clear" onclick="basicBackspace()">
+                    <span class="btn-text">删除</span>
+                </button>
+                <button class="btn btn-operator" onclick="basicInputOperator('÷')">
+                    <span class="btn-symbol">÷</span>
+                </button>
+                <button class="btn btn-operator" onclick="basicInputOperator('×')">
+                    <span class="btn-symbol">×</span>
+                </button>
+                
+                <!-- 第二行：数字7-9和减法 -->
+                <button class="btn btn-number" onclick="basicInputNumber('7')">
+                    <span class="btn-number-text">7</span>
+                </button>
+                <button class="btn btn-number" onclick="basicInputNumber('8')">
+                    <span class="btn-number-text">8</span>
+                </button>
+                <button class="btn btn-number" onclick="basicInputNumber('9')">
+                    <span class="btn-number-text">9</span>
+                </button>
+                <button class="btn btn-operator" onclick="basicInputOperator('-')">
+                    <span class="btn-symbol">−</span>
+                </button>
+                
+                <!-- 第三行：数字4-6和加法 -->
+                <button class="btn btn-number" onclick="basicInputNumber('4')">
+                    <span class="btn-number-text">4</span>
+                </button>
+                <button class="btn btn-number" onclick="basicInputNumber('5')">
+                    <span class="btn-number-text">5</span>
+                </button>
+                <button class="btn btn-number" onclick="basicInputNumber('6')">
+                    <span class="btn-number-text">6</span>
+                </button>
+                <button class="btn btn-operator" onclick="basicInputOperator('+')">
+                    <span class="btn-symbol">+</span>
+                </button>
+                
+                <!-- 第四行：数字1-3和等号 -->
+                <button class="btn btn-number" onclick="basicInputNumber('1')">
+                    <span class="btn-number-text">1</span>
+                </button>
+                <button class="btn btn-number" onclick="basicInputNumber('2')">
+                    <span class="btn-number-text">2</span>
+                </button>
+                <button class="btn btn-number" onclick="basicInputNumber('3')">
+                    <span class="btn-number-text">3</span>
+                </button>
+                <button class="btn btn-equals equals-tall" onclick="basicCalculate()">
+                    <span class="btn-symbol">=</span>
+                </button>
+                
+                <!-- 第五行：0和小数点 -->
+                <button class="btn btn-number zero-wide" onclick="basicInputNumber('0')">
+                    <span class="btn-number-text">0</span>
+                </button>
+                <button class="btn btn-number" onclick="basicInputDecimal()">
+                    <span class="btn-symbol">.</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="/js/basic-calculator.js"></script>
+</body>
+</html>

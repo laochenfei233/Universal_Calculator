@@ -9,6 +9,7 @@ const bmiRoutes = require('./bmi');
 const converterRoutes = require('./converter');
 const relationshipRoutes = require('./relationship');
 const formulaRoutes = require('./formula');
+const housingFundRoutes = require('./housingFund');
 
 const monitoringConfig = require('../../config/monitoring');
 
@@ -118,7 +119,8 @@ router.get('/info', (req, res) => {
       converter: '/api/convert - 单位换算',
       numberConverter: '/api/convert-number - 数字转换',
       relationship: '/api/relationship - 称呼计算',
-      formula: '/api/formula - 公式编辑器'
+      formula: '/api/formula - 公式编辑器',
+      housingFund: '/api/housing-fund - 公积金基数计算'
     }
   });
 });
@@ -137,5 +139,6 @@ router.use('/convert-number', (req, res, next) => {
 });
 router.use('/relationship', relationshipRoutes);
 router.use('/formula', formulaRoutes);
+router.use('/housing-fund', housingFundRoutes);
 
 module.exports = router;

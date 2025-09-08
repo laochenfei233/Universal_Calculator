@@ -1,9 +1,9 @@
 const app = require('./app');
 const sslConfig = require('./utils/sslConfig');
-const logger = require('./utils/logger');
+const { logger } = require('./utils/logger');
 
-const HTTP_PORT = process.env.HTTP_PORT || 3000;
-const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
+const HTTP_PORT = process.env.HTTP_PORT || 19246;
+const HTTPS_PORT = process.env.HTTPS_PORT || 19446;
 
 // 初始化SSL配置
 async function startServer() {

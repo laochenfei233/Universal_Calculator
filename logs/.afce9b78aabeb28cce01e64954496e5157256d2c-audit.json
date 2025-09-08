@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Users\\chenfei\\Documents\\GitHub\\Universal_Calculator\\logs\\.afce9b78aabeb28cce01e64954496e5157256d2c-audit.json",
+    "files": [
+        {
+            "date": 1757336218805,
+            "name": "C:\\Users\\chenfei\\Documents\\GitHub\\Universal_Calculator\\logs\\combined-2025-09-08.log",
+            "hash": "bfca7e4a15d633dfd3983f3fd85f723b76579922426a1c4281a7854ad80f53e1"
+        },
+        {
+            "date": 1757347280762,
+            "name": "C:\\Users\\chenfei\\Documents\\GitHub\\Universal_Calculator\\logs\\combined-2025-09-09.log",
+            "hash": "f6f02dec5c70333d9268446ca6f9f839cf1e964d9284abd0b176af79864c4996"
+        }
+    ],
+    "hashType": "sha256"
+}

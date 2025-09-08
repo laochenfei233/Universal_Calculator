@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科学计算器</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/calculator-layout.css">
+    <link rel="stylesheet" href="/css/calculators.css">
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-panel">
+            <div class="calculator-header">
+                <div class="calculator-title">
+                    <span class="calculator-icon">🧮</span>
+                    <h2>科学计算器</h2>
+                </div>
+                <div class="calculator-actions">
+                    <button class="btn btn-icon angle-mode-btn" onclick="scientificToggleAngleMode()" title="角度模式切换" id="angle-mode-btn">DEG</button>
+                    <button class="btn btn-icon" onclick="showCalculatorHelp('scientific')" title="帮助">
+                        <span>❓</span>
+                    </button>
+                    <a href="/" class="btn btn-icon" title="返回首页">
+                        <span>🏠</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="calculator-display">
+                <div class="display-history" id="scientific-history"></div>
+                <input type="text" id="scientific-display" class="display" readonly placeholder="0" aria-label="科学计算结果显示">
+            </div>
+            
+            <div class="scientific-functions">
+                <div class="function-row">
+                    <button class="btn-function" onclick="scientificInputFunction('sin')" title="正弦函数">sin</button>
+                    <button class="btn-function" onclick="scientificInputFunction('cos')" title="余弦函数">cos</button>
+                    <button class="btn-function" onclick="scientificInputFunction('tan')" title="正切函数">tan</button>
+                    <button class="btn-function" onclick="scientificInputFunction('log')" title="常用对数">log</button>
+                    <button class="btn-function" onclick="scientificInputFunction('ln')" title="自然对数">ln</button>
+                </div>
+                <div class="function-row">
+                    <button class="btn-function" onclick="scientificInputFunction('asin')" title="反正弦">asin</button>
+                    <button class="btn-function" onclick="scientificInputFunction('acos')" title="反余弦">acos</button>
+                    <button class="btn-function" onclick="scientificInputFunction('atan')" title="反正切">atan</button>
+                    <button class="btn-function" onclick="scientificInputFunction('sqrt')" title="平方根">√</button>
+                    <button class="btn-function" onclick="scientificInputFunction('cbrt')" title="立方根">∛</button>
+                </div>
+                <div class="function-row">
+                    <button class="btn-constant" onclick="scientificInputConstant('pi')" title="圆周率">π</button>
+                    <button class="btn-constant" onclick="scientificInputConstant('e')" title="自然常数">e</button>
+                    <button class="btn-function" onclick="scientificInputFunction('abs')" title="绝对值">|x|</button>
+                    <button class="btn-function" onclick="scientificInputFunction('factorial')" title="阶乘">n!</button>
+                    <button class="btn-function" onclick="scientificInputFunction('exp')" title="指数函数">exp</button>
+                </div>
+                <div class="function-row">
+                    <button class="btn-function" onclick="scientificInputFunction('sinh')" title="双曲正弦">sinh</button>
+                    <button class="btn-function" onclick="scientificInputFunction('cosh')" title="双曲余弦">cosh</button>
+                    <button class="btn-function" onclick="scientificInputFunction('tanh')" title="双曲正切">tanh</button>
+                    <button class="btn-function" onclick="scientificInputFunction('pow')" title="幂运算">x^y</button>
+                    <button class="btn-constant" onclick="scientificInputConstant('phi')" title="黄金比例">φ</button>
+                </div>
+            </div>
+            
+            <div class="scientific-calculator-grid">
+                <!-- 第一行 -->
+                <button class="btn btn-clear" onclick="scientificClear()">清除</button>
+                <button class="btn btn-operator" onclick="scientificInputParenthesis('(')">(</button>
+                <button class="btn btn-operator" onclick="scientificInputParenthesis(')')">)</button>
+                <button class="btn btn-clear" onclick="scientificBackspace()">删除</button>
+                <button class="btn btn-operator" onclick="scientificInputOperator('÷')">÷</button>
+                
+                <!-- 第二行 -->
+                <button class="btn btn-number" onclick="scientificInputNumber('7')">7</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('8')">8</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('9')">9</button>
+                <button class="btn btn-operator" onclick="scientificInputOperator('×')">×</button>
+                <button class="btn btn-equals" onclick="scientificCalculate()" rowspan="4">=</button>
+                
+                <!-- 第三行 -->
+                <button class="btn btn-number" onclick="scientificInputNumber('4')">4</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('5')">5</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('6')">6</button>
+                <button class="btn btn-operator" onclick="scientificInputOperator('−')">−</button>
+                
+                <!-- 第四行 -->
+                <button class="btn btn-number" onclick="scientificInputNumber('1')">1</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('2')">2</button>
+                <button class="btn btn-number" onclick="scientificInputNumber('3')">3</button>
+                <button class="btn btn-operator" onclick="scientificInputOperator('+')">+</button>
+                
+                <!-- 第五行 -->
+                <button class="btn btn-number" onclick="scientificInputNumber('0')" colspan="2">0</button>
+                <button class="btn btn-number" onclick="scientificInputDecimal()">.</button>
+            </div>
+        </div>
+    </div>
+    <script src="/js/scientific-calculator.js"></script>
+</body>
+</html>

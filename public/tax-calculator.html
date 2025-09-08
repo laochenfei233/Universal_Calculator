@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个税计算器</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/calculator-layout.css">
+    <link rel="stylesheet" href="/css/calculators.css">
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-panel">
+            <div class="calculator-header">
+                <div class="calculator-title">
+                    <span class="calculator-icon">💰</span>
+                    <h2>个税计算器</h2>
+                </div>
+                <div class="calculator-actions">
+                    <button class="btn btn-icon" onclick="showTaxRates()" title="税率表">
+                        <span>📊</span>
+                    </button>
+                    <button class="btn btn-icon" onclick="showCalculatorHelp('tax')" title="帮助">
+                        <span>❓</span>
+                    </button>
+                    <a href="/" class="btn btn-icon" title="返回首页">
+                        <span>🏠</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="calculator-card">
+                <div class="form-group">
+                    <label for="salary">税前工资 (元)</label>
+                    <input type="number" id="salary" placeholder="请输入税前工资">
+                </div>
+                <div class="form-group">
+                    <label for="social-insurance">社保 (元)</label>
+                    <input type="number" id="social-insurance" placeholder="社保扣除金额" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="housing-fund">公积金 (元)</label>
+                    <input type="number" id="housing-fund" placeholder="公积金扣除金额" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="special-deduction">专项扣除 (元)</label>
+                    <input type="number" id="special-deduction" placeholder="专项扣除金额" value="0">
+                </div>
+                <button class="btn btn-primary" onclick="calculateTax()">计算个税</button>
+                <div id="tax-result" class="result-panel"></div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/tax-calculator.js"></script>
+</body>
+</html>

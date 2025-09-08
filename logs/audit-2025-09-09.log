@@ -1,0 +1,2 @@
+{"level":"warn","message":"未找到SSL证书文件，将使用HTTP","service":"calculator-api","timestamp":"2025-09-09 00:01:22"}
+{"environment":"development","level":"info","message":"HTTP服务器启动成功","port":19246,"service":"calculator-api","timestamp":"2025-09-09 00:01:22"}

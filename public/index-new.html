@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 保留原有的head部分 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多功能计算器</title>
+    <!-- 其他head内容保持不变 -->
+</head>
+<body>
+    <div id="app">
+        <!-- 保留原有的header部分 -->
+        <header class="header">
+            <!-- 原有header内容 -->
+        </header>
+
+        <main class="main">
+            <div id="home-page" class="home-page active">
+                <div class="container">
+                    <div class="page-title">
+                        <h2>选择计算器</h2>
+                        <p>点击下方图标进入相应的计算器</p>
+                    </div>
+                    
+                    <div class="calculator-grid">
+                        <!-- 保留原有的计算器卡片 -->
+                        <div class="calculator-card" data-calculator="basic">
+                            <div class="card-icon">🔢</div>
+                            <h3>基础计算</h3>
+                            <p>基本数学运算</p>
+                        </div>
+                        
+                        <!-- 其他原有计算器卡片保持不变 -->
+                        
+                        <!-- 添加公积金计算器卡片 -->
+                        <div class="calculator-card" data-calculator="housing-fund">
+                            <div class="card-icon">🏦</div>
+                            <h3>公积金计算</h3>
+                            <p>公积金基数与贷款计算</p>
+                        </div>
+
+                        <!-- 保留原有的自定义计算器区域和添加按钮 -->
+                        <div id="custom-calculators-container">
+                            <!-- 自定义计算器将动态添加到这里 -->
+                        </div>
+                        
+                        <div class="calculator-card add-calculator" id="add-calculator">
+                            <div class="card-icon">➕</div>
+                            <h3>添加计算器</h3>
+                            <p>创建自定义计算器</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 保留原有的计算器页面容器 -->
+            <div id="calculator-pages" class="calculator-pages">
+                <!-- 原有计算器页面内容保持不变 -->
+            </div>
+        </main>
+
+        <!-- 保留原有的footer部分 -->
+        <footer class="footer">
+            <!-- 原有footer内容 -->
+        </footer>
+    </div>
+
+    <!-- 保留原有的脚本引用 -->
+    <script src="/js/utils.js"></script>
+    <!-- 其他脚本保持不变 -->
+</body>
+</html>

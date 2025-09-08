@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公积金计算器</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/calculator.css">
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-panel">
+            <div class="calculator-header">
+                <div class="calculator-title">
+                    <span class="calculator-icon">🏦</span>
+                    <h2>公积金计算器</h2>
+                </div>
+                <div class="calculator-actions">
+                    <button class="btn btn-icon" onclick="showCalculatorHelp('housing-fund')" title="帮助">
+                        <span>❓</span>
+                    </button>
+                    <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
+                        <span>🏠</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'payment')">公积金缴费计算</button>
+                <button class="tablinks" onclick="openTab(event, 'adjustment')">基数调整计算</button>
+                <button class="tablinks" onclick="openTab(event, 'loan')">贷款额度计算</button>
+                <button class="tablinks" onclick="openTab(event, 'withdrawal')">提取额度计算</button>
+            </div>
+            
+            <!-- 公积金缴费计算 -->
+            <div id="payment" class="tabcontent" style="display: block;">
+                <div class="calculator-section">
+                    <div class="form-group">
+                        <label for="salary">月工资 (元)</label>
+                        <input type="number" id="salary" placeholder="请输入您的月工资">
+                    </div>
+                    <div class="form-group">
+                        <label for="base">公积金缴费基数 (元，可选)</label>
+                        <input type="number" id="base" placeholder="如不填写，将根据工资自动计算">
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">公积金缴费比例 (如不填写，默认为12%)</label>
+                        <input type="number" id="rate" placeholder="请输入缴费比例(如12表示12%)" value="12">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">城市</label>
+                        <select id="city">
+                            <option value="beijing">北京</option>
+                            <option value="national" selected>全国标准</option>
+                        </select>
+                    </div>
+                    <button onclick="calculatePayment()">计算</button>
+                    <div id="paymentResult" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- 公积金基数调整计算 -->
+            <div id="adjustment" class="tabcontent">
+                <div class="calculator-section">
+                    <div class="form-group">
+                        <label for="averageSalary">上年度职工月平均工资 (元)</label>
+                        <input type="number" id="averageSalary" placeholder="请输入上年度职工月平均工资">
+                    </div>
+                    <div class="form-group">
+                        <label for="personalSalary">个人月平均工资 (元)</label>
+                        <input type="number" id="personalSalary" placeholder="请输入您的月平均工资">
+                    </div>
+                    <div class="form-group">
+                        <label for="currentBase">当前公积金基数 (元)</label>
+                        <input type="number" id="currentBase" placeholder="请输入当前公积金基数">
+                    </div>
+                    <div class="form-group">
+                        <label for="adjustmentRate">公积金缴费比例 (如不填写，默认为12%)</label>
+                        <input type="number" id="adjustmentRate" placeholder="请输入缴费比例(如12表示12%)" value="12">
+                    </div>
+                    <button onclick="calculateAdjustment()">计算</button>
+                    <div id="adjustmentResult" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- 公积金贷款额度计算 -->
+            <div id="loan" class="tabcontent">
+                <div class="calculator-section">
+                    <div class="form-group">
+                        <label for="loanBase">公积金缴费基数 (元)</label>
+                        <input type="number" id="loanBase" placeholder="请输入公积金缴费基数">
+                    </div>
+                    <div class="form-group">
+                        <label for="balance">公积金账户余额 (元)</label>
+                        <input type="number" id="balance" placeholder="请输入公积金账户余额">
+                    </div>
+                    <div class="form-group">
+                        <label for="monthlyIncome">月收入 (元)</label>
+                        <input type="number" id="monthlyIncome" placeholder="请输入您的月收入">
+                    </div>
+                    <div class="form-group">
+                        <label for="years">贷款年限 (年)</label>
+                        <input type="number" id="years" placeholder="请输入贷款年限" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="loanRate">贷款利率 (如不填写，默认为3.1%)</label>
+                        <input type="number" id="loanRate" placeholder="请输入贷款利率" step="0.01" value="3.1">
+                    </div>
+                    <button onclick="calculateLoan()">计算</button>
+                    <div id="loanResult" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- 公积金提取额度计算 -->
+            <div id="withdrawal" class="tabcontent">
+                <div class="calculator-section">
+                    <div class="form-group">
+                        <label for="withdrawalBalance">公积金账户余额 (元)</label>
+                        <input type="number" id="withdrawalBalance" placeholder="请输入公积金账户余额">
+                    </div>
+                    <div class="form-group">
+                        <label for="withdrawalType">提取类型</label>
+                        <select id="withdrawalType" onchange="toggleRentField()">
+                            <option value="rent">租房提取</option>
+                            <option value="medical">医疗提取</option>
+                            <option value="education">教育提取</option>
+                            <option value="other">其他提取</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="rentField">
+                        <label for="monthlyRent">月租金 (元)</label>
+                        <input type="number" id="monthlyRent" placeholder="请输入月租金">
+                    </div>
+                    <button onclick="calculateWithdrawal()">计算</button>
+                    <div id="withdrawalResult" class="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/housing-fund-calculator.js"></script>
+</body>
+</html>
