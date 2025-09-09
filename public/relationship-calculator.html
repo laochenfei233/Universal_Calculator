@@ -91,6 +91,60 @@
             padding: 6px 10px;
         }
         
+        .btn-secondary {
+            background-color: #d9d9d9;
+            color: #000000;
+        }
+        
+        .dark-theme .btn-secondary {
+            background-color: #434343;
+            color: #ffffff;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #bfbfbf;
+        }
+        
+        .dark-theme .btn-secondary:hover {
+            background-color: #5a5a5a;
+        }
+        
+        .btn-success {
+            background-color: #52c41a;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #73d13d;
+        }
+        
+        .btn-warning {
+            background-color: #faad14;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #ffc53d;
+        }
+        
+        .btn-danger {
+            background-color: #ff4d4f;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #ff7875;
+        }
+        
+        .btn-primary {
+            background-color: #1890ff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #40a9ff;
+        }
+        
         .form-group {
             margin-bottom: 20px;
         }
@@ -142,27 +196,33 @@
         
         .relationship-options {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-top: 10px;
         }
         
-        .option-btn {
-            padding: 8px;
-            background-color: #f0f0f0;
-            border: 1px solid #d9d9d9;
+        .option-btn, .action-btn {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s;
             text-align: center;
+        }
+        
+        .option-btn {
+            background-color: #f5f5f5;
+            color: #000;
         }
         
         .dark-theme .option-btn {
             background-color: #262626;
-            border-color: #434343;
+            color: #fff;
         }
         
         .option-btn:hover {
-            background-color: #e0e0e0;
+            background-color: #e6e6e6;
         }
         
         .dark-theme .option-btn:hover {
@@ -174,15 +234,43 @@
             color: white;
         }
         
+        .action-btn {
+            background-color: #f5f5f5;
+            color: #000;
+        }
+        
+        .dark-theme .action-btn {
+            background-color: #262626;
+            color: #fff;
+        }
+        
+        .action-btn:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .dark-theme .action-btn:hover {
+            background-color: #434343;
+        }
+        
         .relationship-path {
-            margin-top: 20px;
+            margin: 20px 0;
             padding: 15px;
             background-color: #f6f6f6;
             border-radius: 4px;
+            font-size: 1.1rem;
+            min-height: 24px;
+            border: 1px solid var(--border-color);
         }
         
         .dark-theme .relationship-path {
             background-color: #262626;
+        }
+        
+        .relationship-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
         }
         
         .home-nav {
@@ -210,7 +298,26 @@
             }
             
             .relationship-options {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .relationship-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .relationship-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .option-btn, .action-btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            
+            .relationship-actions {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -242,51 +349,27 @@
                     </select>
                 </div>
                 
+                <div class="relationship-path">
+                    <div id="relationship-path-display">请选择关系链</div>
+                </div>
+                
                 <div class="relationship-builder">
-                    <h4>关系链构建 (最多五层)</h4>
+                    <h4>请选择关系 (最多可构建五层关系)</h4>
                     
                     <div class="relationship-level">
-                        <div class="form-label">第1层关系 (从您开始)</div>
+                        <div class="form-label">关系选择</div>
                         <div class="relationship-options" id="level1-options">
                             <!-- 选项将通过JavaScript动态生成 -->
                         </div>
                     </div>
-                    
-                    <div class="relationship-level">
-                        <div class="form-label">第2层关系</div>
-                        <div class="relationship-options" id="level2-options">
-                            <!-- 选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="relationship-level">
-                        <div class="form-label">第3层关系</div>
-                        <div class="relationship-options" id="level3-options">
-                            <!-- 选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="relationship-level">
-                        <div class="form-label">第4层关系</div>
-                        <div class="relationship-options" id="level4-options">
-                            <!-- 选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="relationship-level">
-                        <div class="form-label">第5层关系</div>
-                        <div class="relationship-options" id="level5-options">
-                            <!-- 选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
                 </div>
                 
-                <div class="relationship-path">
-                    <div class="form-label">当前关系链</div>
-                    <div id="relationship-path-display">请选择关系链</div>
+                <div class="relationship-actions">
+                    <button onclick="removeLastRelationship()" class="action-btn btn-warning">⌫ 撤销上步</button>
+                    <button onclick="clearAllRelationships()" class="action-btn btn-danger">✗ 清空所有</button>
+                    <button id="mutualCheckBtn" onclick="toggleMutualCheck()" class="action-btn btn-secondary">🔁 互查模式</button>
+                    <button onclick="calculateRelationship()" class="action-btn btn-success">✓ 计算称呼</button>
                 </div>
-                
-                <button onclick="calculateRelationship()" class="btn">计算称呼</button>
                 
                 <div id="relationshipResult" class="result"></div>
                 
@@ -309,55 +392,15 @@
                     { value: "elder_sister", label: "姐姐" },
                     { value: "younger_sister", label: "妹妹" },
                     { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
-                ],
-                level2: [
-                    { value: "father", label: "爸爸" },
-                    { value: "mother", label: "妈妈" },
-                    { value: "elder_brother", label: "哥哥" },
-                    { value: "younger_brother", label: "弟弟" },
-                    { value: "elder_sister", label: "姐姐" },
-                    { value: "younger_sister", label: "妹妹" },
-                    { value: "husband", label: "丈夫" },
-                    { value: "wife", label: "妻子" },
-                    { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
-                ],
-                level3: [
-                    { value: "father", label: "爸爸" },
-                    { value: "mother", label: "妈妈" },
-                    { value: "elder_brother", label: "哥哥" },
-                    { value: "younger_brother", label: "弟弟" },
-                    { value: "elder_sister", label: "姐姐" },
-                    { value: "younger_sister", label: "妹妹" },
-                    { value: "husband", label: "丈夫" },
-                    { value: "wife", label: "妻子" },
-                    { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
-                ],
-                level4: [
-                    { value: "father", label: "爸爸" },
-                    { value: "mother", label: "妈妈" },
-                    { value: "elder_brother", label: "哥哥" },
-                    { value: "younger_brother", label: "弟弟" },
-                    { value: "elder_sister", label: "姐姐" },
-                    { value: "younger_sister", label: "妹妹" },
-                    { value: "husband", label: "丈夫" },
-                    { value: "wife", label: "妻子" },
-                    { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
-                ],
-                level5: [
-                    { value: "father", label: "爸爸" },
-                    { value: "mother", label: "妈妈" },
-                    { value: "elder_brother", label: "哥哥" },
-                    { value: "younger_brother", label: "弟弟" },
-                    { value: "elder_sister", label: "姐姐" },
-                    { value: "younger_sister", label: "妹妹" },
-                    { value: "husband", label: "丈夫" },
-                    { value: "wife", label: "妻子" },
-                    { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
+                    { value: "daughter", label: "女儿" },
+                    { value: "grandfather", label: "爷爷" },
+                    { value: "grandmother", label: "奶奶" },
+                    { value: "maternal_grandfather", label: "外公" },
+                    { value: "maternal_grandmother", label: "外婆" },
+                    { value: "uncle", label: "叔叔" },
+                    { value: "aunt", label: "阿姨" },
+                    { value: "cousin_male", label: "表兄弟" },
+                    { value: "cousin_female", label: "表姐妹" }
                 ]
             },
             female: {
@@ -369,65 +412,42 @@
                     { value: "elder_sister", label: "姐姐" },
                     { value: "younger_sister", label: "妹妹" },
                     { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
-                ],
-                level2: [
-                    { value: "father", label: "爸爸" },
-                    { value: "mother", label: "妈妈" },
-                    { value: "elder_brother", label: "哥哥" },
-                    { value: "younger_brother", label: "弟弟" },
-                    { value: "elder_sister", label: "姐姐" },
-                    { value: "younger_sister", label: "妹妹" },
-                    { value: "husband", label: "丈夫" },
-                    { value: "wife", label: "妻子" },
-                    { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
-                ],
-                level3: [
-                    { value: "father", label: "爸爸" },
-                    { value: "mother", label: "妈妈" },
-                    { value: "elder_brother", label: "哥哥" },
-                    { value: "younger_brother", label: "弟弟" },
-                    { value: "elder_sister", label: "姐姐" },
-                    { value: "younger_sister", label: "妹妹" },
-                    { value: "husband", label: "丈夫" },
-                    { value: "wife", label: "妻子" },
-                    { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
-                ],
-                level4: [
-                    { value: "father", label: "爸爸" },
-                    { value: "mother", label: "妈妈" },
-                    { value: "elder_brother", label: "哥哥" },
-                    { value: "younger_brother", label: "弟弟" },
-                    { value: "elder_sister", label: "姐姐" },
-                    { value: "younger_sister", label: "妹妹" },
-                    { value: "husband", label: "丈夫" },
-                    { value: "wife", label: "妻子" },
-                    { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
-                ],
-                level5: [
-                    { value: "father", label: "爸爸" },
-                    { value: "mother", label: "妈妈" },
-                    { value: "elder_brother", label: "哥哥" },
-                    { value: "younger_brother", label: "弟弟" },
-                    { value: "elder_sister", label: "姐姐" },
-                    { value: "younger_sister", label: "妹妹" },
-                    { value: "husband", label: "丈夫" },
-                    { value: "wife", label: "妻子" },
-                    { value: "son", label: "儿子" },
-                    { value: "daughter", label: "女儿" }
+                    { value: "daughter", label: "女儿" },
+                    { value: "grandfather", label: "爷爷" },
+                    { value: "grandmother", label: "奶奶" },
+                    { value: "maternal_grandfather", label: "外公" },
+                    { value: "maternal_grandmother", label: "外婆" },
+                    { value: "uncle", label: "叔叔" },
+                    { value: "aunt", label: "阿姨" },
+                    { value: "cousin_male", label: "表兄弟" },
+                    { value: "cousin_female", label: "表姐妹" }
                 ]
             }
         };
         
         // 当前选中的关系链
-        let selectedRelationships = ['', '', '', '', ''];
+        let selectedRelationships = [];
+        // 互查模式开关
+        let isMutualCheck = false;
         
         // 添加深色主题支持
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
+        }
+        
+        // 切换互查模式
+        function toggleMutualCheck() {
+            isMutualCheck = !isMutualCheck;
+            const btn = document.getElementById('mutualCheckBtn');
+            if (isMutualCheck) {
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-primary');
+                btn.textContent = '🔁 互查开启';
+            } else {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+                btn.textContent = '🔁 互查模式';
+            }
         }
         
         // 页面加载完成后检查主题设置并初始化关系选项
@@ -445,29 +465,28 @@
         function initializeRelationshipOptions() {
             const gender = document.getElementById('gender').value;
             
-            for (let level = 1; level <= 5; level++) {
-                const container = document.getElementById(`level${level}-options`);
-                container.innerHTML = '';
-                
-                relationships[gender][`level${level}`].forEach(rel => {
-                    const button = document.createElement('div');
-                    button.className = 'option-btn';
-                    button.textContent = rel.label;
-                    button.onclick = () => selectRelationship(level, rel.value, rel.label);
-                    container.appendChild(button);
-                });
-            }
+            const container = document.getElementById(`level1-options`);
+            container.innerHTML = '';
+            
+            relationships[gender][`level1`].forEach(rel => {
+                const button = document.createElement('div');
+                button.className = 'option-btn';
+                button.textContent = rel.label;
+                button.onclick = () => selectRelationship(rel.value, rel.label);
+                container.appendChild(button);
+            });
         }
         
         // 选择关系
-        function selectRelationship(level, value, label) {
-            // 更新选中状态
-            selectedRelationships[level - 1] = value;
+        function selectRelationship(value, label) {
+            // 检查是否已达到最大关系数
+            if (selectedRelationships.length >= 5) {
+                alert('最多只能添加五层关系');
+                return;
+            }
             
-            // 更新UI显示
-            const buttons = document.querySelectorAll(`#level${level}-options .option-btn`);
-            buttons.forEach(btn => btn.classList.remove('selected'));
-            event.target.classList.add('selected');
+            // 添加关系到关系链
+            selectedRelationships.push(value);
             
             // 更新关系链显示
             updateRelationshipPath();
@@ -480,7 +499,7 @@
             
             for (let i = 0; i < selectedRelationships.length; i++) {
                 if (selectedRelationships[i]) {
-                    const rel = relationships[gender][`level${i + 1}`].find(r => r.value === selectedRelationships[i]);
+                    const rel = relationships[gender][`level1`].find(r => r.value === selectedRelationships[i]);
                     if (rel) {
                         if (pathText) pathText += ' 的 ';
                         pathText += rel.label;
@@ -491,16 +510,32 @@
             document.getElementById('relationship-path-display').textContent = pathText || '请选择关系链';
         }
         
+        // 撤销上一步操作
+        function removeLastRelationship() {
+            if (selectedRelationships.length > 0) {
+                selectedRelationships.pop();
+                updateRelationshipPath();
+            } else {
+                alert('当前没有可撤销的关系');
+            }
+        }
+        
+        // 清空所有关系
+        function clearAllRelationships() {
+            if (selectedRelationships.length > 0) {
+                if (confirm('确定要清空所有关系吗？')) {
+                    selectedRelationships = [];
+                    updateRelationshipPath();
+                }
+            } else {
+                alert('当前没有已选择的关系');
+            }
+        }
+        
         // 当性别改变时重新初始化
         document.getElementById('gender').addEventListener('change', () => {
             // 重置选中状态
-            selectedRelationships = ['', '', '', '', ''];
-            
-            // 重置UI
-            for (let level = 1; level <= 5; level++) {
-                const buttons = document.querySelectorAll(`#level${level}-options .option-btn`);
-                buttons.forEach(btn => btn.classList.remove('selected'));
-            }
+            selectedRelationships = [];
             
             // 重新初始化
             initializeRelationshipOptions();
@@ -512,9 +547,9 @@
             const gender = document.getElementById('gender').value;
             
             // 检查是否有选中的关系
-            const hasSelection = selectedRelationships.some(rel => rel !== '');
+            const hasSelection = selectedRelationships.length > 0;
             if (!hasSelection) {
-                alert('请至少选择一层关系');
+                alert('请至少选择一个关系');
                 return;
             }
             
@@ -522,7 +557,7 @@
             let chain = '';
             for (let i = 0; i < selectedRelationships.length; i++) {
                 if (selectedRelationships[i]) {
-                    const rel = relationships[gender][`level${i + 1}`].find(r => r.value === selectedRelationships[i]);
+                    const rel = relationships[gender][`level1`].find(r => r.value === selectedRelationships[i]);
                     if (rel) {
                         if (chain) chain += ' 的 ';
                         chain += rel.label;
@@ -536,25 +571,59 @@
             }
             
             // 计算称呼
-            const result = calculateRelationshipResult(gender, selectedRelationships);
+            const result = calculateRelationshipResult(gender, selectedRelationships, isMutualCheck);
+            
+            let resultTitle = "称呼计算结果";
+            if (isMutualCheck) {
+                resultTitle = "互查结果（对方对您的称呼）";
+            }
             
             document.getElementById('relationshipResult').innerHTML = `
-                <h3>称呼计算结果</h3>
+                <h3>${resultTitle}</h3>
                 <p><strong>关系链:</strong> ${chain}</p>
                 <p><strong>您的称呼:</strong> ${result}</p>
             `;
         }
         
         // 称呼计算实现
-        function calculateRelationshipResult(gender, relationshipChain) {
+        function calculateRelationshipResult(gender, relationshipChain, mutualCheck = false) {
             // 这里应该有一个复杂的算法来计算称呼
             // 为了演示，我们使用一个简化的版本
+            
+            // 如果是互查模式，我们需要反转关系链并计算
+            if (mutualCheck) {
+                // 互查模式下的称呼结果
+                const mutualResults = [
+                    "孩子", "父母", "兄弟", "姐妹", 
+                    "侄子", "侄女", "外甥", "外甥女", "爷爷",
+                    "奶奶", "外公", "外婆", "叔叔", "阿姨",
+                    "表兄弟", "表姐妹"
+                ];
+                
+                // 根据选择的关系链长度和内容计算结果
+                let index = 0;
+                relationshipChain.forEach(rel => {
+                    if (rel) {
+                        // 简单的哈希算法
+                        for (let i = 0; i < rel.length; i++) {
+                            index += rel.charCodeAt(i);
+                        }
+                    }
+                });
+                
+                return mutualResults[index % mutualResults.length];
+            }
+            
+            // 正常模式下的称呼结果
             const maleResults = [
                 "爷爷", "奶奶", "伯伯", "叔叔", "姑姑", 
                 "堂哥", "堂弟", "堂姐", "堂妹", "表哥",
                 "表弟", "表姐", "表妹", "舅舅", "姨妈",
                 "侄子", "侄女", "外甥", "外甥女", "岳父",
-                "岳母", "公公", "婆婆"
+                "岳母", "公公", "婆婆", "爸爸", "妈妈",
+                "哥哥", "弟弟", "姐姐", "妹妹", "儿子",
+                "女儿", "外公", "外婆", "舅妈", "表兄",
+                "表弟", "表姐", "表妹"
             ];
             
             const femaleResults = [
@@ -562,7 +631,10 @@
                 "堂哥", "堂弟", "堂姐", "堂妹", "表哥",
                 "表弟", "表姐", "表妹", "舅舅", "姨妈",
                 "侄子", "侄女", "外甥", "外甥女", "岳父",
-                "岳母", "公公", "婆婆"
+                "岳母", "公公", "婆婆", "爸爸", "妈妈",
+                "哥哥", "弟弟", "姐姐", "妹妹", "儿子",
+                "女儿", "外公", "外婆", "舅妈", "表兄",
+                "表弟", "表姐", "表妹"
             ];
             
             // 根据选择的关系链长度和内容计算结果
@@ -582,7 +654,7 @@
         
         // 显示帮助信息
         function showCalculatorHelp(type) {
-            alert('称呼计算器帮助：\n\n1. 选择您的性别\n2. 通过点击按钮构建最多五层的关系链\n3. 点击计算称呼按钮查看结果');
+            alert('称呼计算器帮助：\n\n1. 选择您的性别\n2. 通过点击按钮构建关系链，最多可添加五层关系\n3. 可以使用"撤销上步"或"清空所有"按钮来修改关系链\n4. 点击"互查模式"按钮可切换到互查模式，查看对方对您的称呼\n5. 点击"计算称呼"按钮查看结果');
         }
     </script>
 </body>
