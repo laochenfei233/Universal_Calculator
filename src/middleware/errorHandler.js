@@ -6,8 +6,12 @@ const logger = require('../utils/logger');
  * 全局错误处理中间件
  */
 const { v4: uuidv4 } = require('uuid');
+const ResponseUtil = require('../utils/response');
+const { ERROR_TYPES, HTTP_STATUS } = require('../config/constants');
+const logger = require('../utils/logger');
 
 const errorHandler = (err, req, res, next) => {
+  const errorId = uuidv4();
   // 确保响应头设置为JSON
   res.setHeader('Content-Type', 'application/json');
   
