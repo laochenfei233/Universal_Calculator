@@ -1,4 +1,9 @@
-const { v4: uuidv4 } = require('uuid');
+// 使用动态导入方式引入uuid
+let uuidv4;
+(async () => {
+  const uuidModule = await import('uuid');
+  uuidv4 = uuidModule.v4;
+})();
 const ResponseUtil = require('../utils/response');
 const { ERROR_TYPES, HTTP_STATUS } = require('../config/constants');
 const logger = require('../utils/logger');
@@ -10,7 +15,7 @@ const errorHandler = (err, req, res, next) => {
   // 确保响应头设置为JSON
   res.setHeader('Content-Type', 'application/json');
   
-  const errorId = uuidv4();
+  const errorId = uuidv4 ? uuidv4() : Date.now().toString(36) + Math.random().toString(36).substr(2);
   const timestamp = new Date().toISOString();
   
   // 记录错误日志
