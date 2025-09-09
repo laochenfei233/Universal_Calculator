@@ -18,17 +18,25 @@ const errorHandler = (err, req, res, next) => {
   const errorId = uuidv4 ? uuidv4() : Date.now().toString(36) + Math.random().toString(36).substr(2);
   const timestamp = new Date().toISOString();
   
-  // 记录错误日志
-  logger.error('Error occurred:', {
-    errorId,
-    message: err.message,
-    stack: err.stack,
-    url: req.url,
-    method: req.method,
-    ip: req.ip,
-    userAgent: req.get('User-Agent'),
-    timestamp
-  });
+  // 记录错误日志（添加防御性检查）
+  if (logger && typeof logger.error === 'function') {
+    logger.error('Error occurred:', {
+      errorId,
+      message: err.message,
+      stack: err.stack,
+      url: req.url,
+      method: req.method,
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      timestamp
+    });
+  } else {
+    console.error('Error occurred:', {
+      errorId,
+      message: err.message,
+      url: req.url
+    });
+  }
 
   // 处理不同类型的错误
   if (err.name === 'ValidationError') {
