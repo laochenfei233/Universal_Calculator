@@ -5,8 +5,13 @@ const logger = require('../utils/logger');
 /**
  * 全局错误处理中间件
  */
+const { v4: uuidv4 } = require('uuid');
+
 const errorHandler = (err, req, res, next) => {
-  const errorId = generateErrorId();
+  // 确保响应头设置为JSON
+  res.setHeader('Content-Type', 'application/json');
+  
+  const errorId = uuidv4();
   const timestamp = new Date().toISOString();
   
   // 记录错误日志
@@ -80,10 +85,26 @@ const errorHandler = (err, req, res, next) => {
     );
   }
 
-  // 默认服务器错误
+  // 默认服务器错误处理
   const errorMessage = process.env.NODE_ENV === 'production' 
     ? '服务器内部错误，请联系管理员' 
     : err.message;
+
+  // 确保错误对象有message属性
+  if (!err.message) {
+    err.message = '未知错误';
+  }
+
+  // 处理HTML错误响应
+  if (typeof err === 'string' && err.startsWith('<!DOCTYPE')) {
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      error: '服务器内部错误',
+      code: ERROR_TYPES.INTERNAL_ERROR,
+      errorId,
+      timestamp
+    });
+  }
 
   return ResponseUtil.error(
     res,
@@ -92,7 +113,11 @@ const errorHandler = (err, req, res, next) => {
     HTTP_STATUS.INTERNAL_SERVER_ERROR,
     { 
       errorId,
-      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+      timestamp,
+      ...(process.env.NODE_ENV === 'development' && { 
+        stack: err.stack,
+        originalError: err 
+      })
     }
   );
 };
