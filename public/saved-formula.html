@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义公式计算器</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --border-color: #d9d9d9;
+        }
+        
+        .dark-theme {
+            --bg-color: #1f1f1f;
+            --text-color: #ffffff;
+            --card-bg: #141414;
+            --header-bg: #1f1f1f;
+            --border-color: #434343;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .calculator-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+            padding: 20px;
+        }
+        
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculator-title h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .calculator-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-icon {
+            padding: 6px 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control, .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: #e6f7ff;
+            border-radius: 4px;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .dark-theme .result {
+            background-color: #112b4d;
+        }
+        
+        .variables-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .variable-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .variable-name, .variable-value {
+            flex: 1;
+        }
+        
+        .home-nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .home-nav .btn {
+            background-color: #52c41a;
+        }
+        
+        .home-nav .btn:hover {
+            background-color: #73d13d;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .calculator-actions {
+                align-self: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator-panel">
+            <div class="calculator-header">
+                <div class="calculator-title">
+                    <span class="calculator-icon" id="formulaLogo">📐</span>
+                    <h2 id="formulaName">自定义公式计算器</h2>
+                </div>
+                <div class="calculator-actions">
+                    <button class="btn btn-icon" onclick="showCalculatorHelp()" title="帮助">
+                        <span>❓</span>
+                    </button>
+                    <a href="/" class="btn btn-icon" title="返回首页">
+                        <span>🏠</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="calculator-section">
+                <div class="form-group">
+                    <label class="form-label">公式</label>
+                    <div class="form-control" id="formulaDisplay" style="font-family: monospace; min-height: 50px;"></div>
+                </div>
+                
+                <div class="variables-section">
+                    <h4>变量设置</h4>
+                    <div id="variablesContainer">
+                        <!-- 变量将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <button onclick="calculateFormula()" class="btn">计算</button>
+                
+                <div id="formulaResult" class="result"></div>
+                
+                <div class="home-nav">
+                    <a href="/" class="btn">🏠 返回首页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 当前公式
+        let currentFormula = null;
+        
+        // 添加深色主题支持
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-theme');
+            }
+            
+            // 获取保存的公式
+            const formulaStr = localStorage.getItem('currentFormula');
+            if (formulaStr) {
+                try {
+                    currentFormula = JSON.parse(formulaStr);
+                    initializeFormula();
+                } catch (e) {
+                    console.error('解析公式失败:', e);
+                    window.location.href = '/';
+                }
+            } else {
+                window.location.href = '/';
+            }
+        });
+        
+        // 初始化公式显示
+        function initializeFormula() {
+            if (!currentFormula) return;
+            
+            // 设置页面标题和图标
+            document.getElementById('formulaName').textContent = currentFormula.name;
+            document.getElementById('formulaLogo').textContent = currentFormula.logo;
+            document.getElementById('formulaDisplay').textContent = currentFormula.formula;
+            
+            // 创建变量输入框
+            const container = document.getElementById('variablesContainer');
+            container.innerHTML = '';
+            
+            for (const [name, value] of Object.entries(currentFormula.variables)) {
+                const variableRow = document.createElement('div');
+                variableRow.className = 'variable-row';
+                variableRow.innerHTML = `
+                    <input type="text" class="form-control variable-name" placeholder="变量名" value="${name}" readonly>
+                    <input type="number" class="form-control variable-value" placeholder="变量值" value="${value}" id="var-${name}">
+                `;
+                container.appendChild(variableRow);
+            }
+            
+            // 如果没有变量，添加提示
+            if (Object.keys(currentFormula.variables).length === 0) {
+                container.innerHTML = '<p>该公式无需输入变量</p>';
+            }
+        }
+        
+        // 计算公式
+        function calculateFormula() {
+            if (!currentFormula) return;
+            
+            // 获取变量值
+            const variables = {};
+            for (const [name, value] of Object.entries(currentFormula.variables)) {
+                const input = document.getElementById(`var-${name}`);
+                if (input) {
+                    variables[name] = parseFloat(input.value) || 0;
+                }
+            }
+            
+            // 计算结果
+            const result = evaluateFormula(currentFormula.formula, variables);
+            
+            document.getElementById('formulaResult').innerHTML = `
+                <h3>计算结果</h3>
+                <p><strong>公式:</strong> ${currentFormula.formula}</p>
+                <p><strong>变量:</strong> ${JSON.stringify(variables)}</p>
+                <p><strong>结果:</strong> ${result}</p>
+            `;
+        }
+        
+        // 简化的公式计算实现
+        function evaluateFormula(formula, variables) {
+            try {
+                // 替换变量
+                let expression = formula;
+                for (const [name, value] of Object.entries(variables)) {
+                    const regex = new RegExp(`\\b${name}\\b`, 'g');
+                    expression = expression.replace(regex, value);
+                }
+                
+                // 替换数学函数
+                expression = expression.replace(/sqrt\(/g, 'Math.sqrt(');
+                expression = expression.replace(/sin\(/g, 'Math.sin(');
+                expression = expression.replace(/cos\(/g, 'Math.cos(');
+                expression = expression.replace(/log\(/g, 'Math.log10(');
+                expression = expression.replace(/\^/g, '**');
+                expression = expression.replace(/pi/g, 'Math.PI');
+                expression = expression.replace(/e/g, 'Math.E');
+                
+                // 计算表达式
+                const result = Function('"use strict"; return (' + expression + ')')();
+                return typeof result === 'number' ? result.toFixed(6) : result;
+            } catch (e) {
+                return '计算错误: ' + e.message;
+            }
+        }
+        
+        // 显示帮助信息
+        function showCalculatorHelp() {
+            alert('自定义公式计算器帮助：\n\n1. 在变量设置区域输入变量值\n2. 点击计算按钮查看结果');
+        }
+    </script>
+</body>
+</html>

@@ -4,98 +4,376 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>科学计算器</title>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/calculator-layout.css">
-    <link rel="stylesheet" href="/css/calculators.css">
+    <link rel="stylesheet" href="/css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/calculator-layout.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/calculators.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/calculator-layout.css">
+        <link rel="stylesheet" href="/css/calculators.css">
+    </noscript>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --border-color: #d9d9d9;
+        }
+        
+        .dark-theme {
+            --bg-color: #1f1f1f;
+            --text-color: #ffffff;
+            --card-bg: #141414;
+            --header-bg: #1f1f1f;
+            --border-color: #434343;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .calculator-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        
+        .calculator-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculator-title h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .calculator-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-icon {
+            padding: 6px 10px;
+        }
+        
+        .angle-mode-btn {
+            background-color: #722ed1;
+        }
+        
+        .angle-mode-btn:hover {
+            background-color: #9254de;
+        }
+        
+        .calculator-display {
+            margin-bottom: 20px;
+        }
+        
+        .display {
+            width: 100%;
+            font-size: 2rem;
+            text-align: right;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        
+        .scientific-functions {
+            margin-bottom: 20px;
+        }
+        
+        .function-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .btn-function, .btn-constant {
+            padding: 10px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-function {
+            background-color: #f0f0f0;
+            color: #000;
+        }
+        
+        .dark-theme .btn-function {
+            background-color: #262626;
+            color: #fff;
+        }
+        
+        .btn-function:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .dark-theme .btn-function:hover {
+            background-color: #434343;
+        }
+        
+        .btn-constant {
+            background-color: #ffe7ba;
+            color: #000;
+        }
+        
+        .dark-theme .btn-constant {
+            background-color: #4b3d2a;
+            color: #fff;
+        }
+        
+        .btn-constant:hover {
+            background-color: #ffd591;
+        }
+        
+        .dark-theme .btn-constant:hover {
+            background-color: #6a5a3d;
+        }
+        
+        .scientific-calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        
+        .btn-number, .btn-operator, .btn-clear, .btn-equals {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-number {
+            background-color: #f5f5f5;
+            color: #000;
+        }
+        
+        .dark-theme .btn-number {
+            background-color: #262626;
+            color: #fff;
+        }
+        
+        .btn-number:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .dark-theme .btn-number:hover {
+            background-color: #434343;
+        }
+        
+        .btn-operator {
+            background-color: #1890ff;
+            color: white;
+        }
+        
+        .btn-operator:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-clear {
+            background-color: #ff4d4f;
+            color: white;
+        }
+        
+        .btn-clear:hover {
+            background-color: #ff7875;
+        }
+        
+        .btn-equals {
+            background-color: #52c41a;
+            color: white;
+        }
+        
+        .btn-equals:hover {
+            background-color: #73d13d;
+        }
+        
+        @media (max-width: 480px) {
+            .calculator-panel {
+                padding: 15px;
+            }
+            
+            .btn-number, .btn-operator, .btn-clear, .btn-equals, 
+            .btn-function, .btn-constant {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .scientific-calculator-grid {
+                gap: 6px;
+            }
+            
+            .function-row {
+                gap: 6px;
+                margin-bottom: 6px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="calculator-container">
-        <div class="calculator-panel">
-            <div class="calculator-header">
-                <div class="calculator-title">
-                    <span class="calculator-icon">🧮</span>
-                    <h2>科学计算器</h2>
+    <div class="container">
+        <div class="calculator-container">
+            <div class="calculator-panel">
+                <div class="calculator-header">
+                    <div class="calculator-title">
+                        <span class="calculator-icon">🧮</span>
+                        <h2>科学计算器</h2>
+                    </div>
+                    <div class="calculator-actions">
+                        <button class="btn btn-icon angle-mode-btn" onclick="scientificToggleAngleMode()" title="角度模式切换" id="angle-mode-btn">DEG</button>
+                        <button class="btn btn-icon" onclick="showCalculatorHelp('scientific')" title="帮助">
+                            <span>❓</span>
+                        </button>
+                        <a href="/" class="btn btn-icon" title="返回首页">
+                            <span>🏠</span>
+                        </a>
+                    </div>
                 </div>
-                <div class="calculator-actions">
-                    <button class="btn btn-icon angle-mode-btn" onclick="scientificToggleAngleMode()" title="角度模式切换" id="angle-mode-btn">DEG</button>
-                    <button class="btn btn-icon" onclick="showCalculatorHelp('scientific')" title="帮助">
-                        <span>❓</span>
-                    </button>
-                    <a href="/" class="btn btn-icon" title="返回首页">
-                        <span>🏠</span>
-                    </a>
-                </div>
-            </div>
-            
-            <div class="calculator-display">
-                <div class="display-history" id="scientific-history"></div>
-                <input type="text" id="scientific-display" class="display" readonly placeholder="0" aria-label="科学计算结果显示">
-            </div>
-            
-            <div class="scientific-functions">
-                <div class="function-row">
-                    <button class="btn-function" onclick="scientificInputFunction('sin')" title="正弦函数">sin</button>
-                    <button class="btn-function" onclick="scientificInputFunction('cos')" title="余弦函数">cos</button>
-                    <button class="btn-function" onclick="scientificInputFunction('tan')" title="正切函数">tan</button>
-                    <button class="btn-function" onclick="scientificInputFunction('log')" title="常用对数">log</button>
-                    <button class="btn-function" onclick="scientificInputFunction('ln')" title="自然对数">ln</button>
-                </div>
-                <div class="function-row">
-                    <button class="btn-function" onclick="scientificInputFunction('asin')" title="反正弦">asin</button>
-                    <button class="btn-function" onclick="scientificInputFunction('acos')" title="反余弦">acos</button>
-                    <button class="btn-function" onclick="scientificInputFunction('atan')" title="反正切">atan</button>
-                    <button class="btn-function" onclick="scientificInputFunction('sqrt')" title="平方根">√</button>
-                    <button class="btn-function" onclick="scientificInputFunction('cbrt')" title="立方根">∛</button>
-                </div>
-                <div class="function-row">
-                    <button class="btn-constant" onclick="scientificInputConstant('pi')" title="圆周率">π</button>
-                    <button class="btn-constant" onclick="scientificInputConstant('e')" title="自然常数">e</button>
-                    <button class="btn-function" onclick="scientificInputFunction('abs')" title="绝对值">|x|</button>
-                    <button class="btn-function" onclick="scientificInputFunction('factorial')" title="阶乘">n!</button>
-                    <button class="btn-function" onclick="scientificInputFunction('exp')" title="指数函数">exp</button>
-                </div>
-                <div class="function-row">
-                    <button class="btn-function" onclick="scientificInputFunction('sinh')" title="双曲正弦">sinh</button>
-                    <button class="btn-function" onclick="scientificInputFunction('cosh')" title="双曲余弦">cosh</button>
-                    <button class="btn-function" onclick="scientificInputFunction('tanh')" title="双曲正切">tanh</button>
-                    <button class="btn-function" onclick="scientificInputFunction('pow')" title="幂运算">x^y</button>
-                    <button class="btn-constant" onclick="scientificInputConstant('phi')" title="黄金比例">φ</button>
-                </div>
-            </div>
-            
-            <div class="scientific-calculator-grid">
-                <!-- 第一行 -->
-                <button class="btn btn-clear" onclick="scientificClear()">清除</button>
-                <button class="btn btn-operator" onclick="scientificInputParenthesis('(')">(</button>
-                <button class="btn btn-operator" onclick="scientificInputParenthesis(')')">)</button>
-                <button class="btn btn-clear" onclick="scientificBackspace()">删除</button>
-                <button class="btn btn-operator" onclick="scientificInputOperator('÷')">÷</button>
                 
-                <!-- 第二行 -->
-                <button class="btn btn-number" onclick="scientificInputNumber('7')">7</button>
-                <button class="btn btn-number" onclick="scientificInputNumber('8')">8</button>
-                <button class="btn btn-number" onclick="scientificInputNumber('9')">9</button>
-                <button class="btn btn-operator" onclick="scientificInputOperator('×')">×</button>
-                <button class="btn btn-equals" onclick="scientificCalculate()" rowspan="4">=</button>
+                <div class="calculator-display">
+                    <input type="text" id="scientific-display" class="display" readonly placeholder="0" aria-label="科学计算结果显示">
+                </div>
                 
-                <!-- 第三行 -->
-                <button class="btn btn-number" onclick="scientificInputNumber('4')">4</button>
-                <button class="btn btn-number" onclick="scientificInputNumber('5')">5</button>
-                <button class="btn btn-number" onclick="scientificInputNumber('6')">6</button>
-                <button class="btn btn-operator" onclick="scientificInputOperator('−')">−</button>
+                <div class="scientific-functions">
+                    <div class="function-row">
+                        <button class="btn-function" onclick="scientificInputFunction('sin')" title="正弦函数">sin</button>
+                        <button class="btn-function" onclick="scientificInputFunction('cos')" title="余弦函数">cos</button>
+                        <button class="btn-function" onclick="scientificInputFunction('tan')" title="正切函数">tan</button>
+                        <button class="btn-function" onclick="scientificInputFunction('log')" title="常用对数">log</button>
+                        <button class="btn-function" onclick="scientificInputFunction('ln')" title="自然对数">ln</button>
+                    </div>
+                    <div class="function-row">
+                        <button class="btn-function" onclick="scientificInputFunction('asin')" title="反正弦">asin</button>
+                        <button class="btn-function" onclick="scientificInputFunction('acos')" title="反余弦">acos</button>
+                        <button class="btn-function" onclick="scientificInputFunction('atan')" title="反正切">atan</button>
+                        <button class="btn-function" onclick="scientificInputFunction('sqrt')" title="平方根">√</button>
+                        <button class="btn-function" onclick="scientificInputFunction('cbrt')" title="立方根">∛</button>
+                    </div>
+                    <div class="function-row">
+                        <button class="btn-constant" onclick="scientificInputConstant('pi')" title="圆周率">π</button>
+                        <button class="btn-constant" onclick="scientificInputConstant('e')" title="自然常数">e</button>
+                        <button class="btn-function" onclick="scientificInputFunction('abs')" title="绝对值">|x|</button>
+                        <button class="btn-function" onclick="scientificInputFunction('factorial')" title="阶乘">n!</button>
+                        <button class="btn-function" onclick="scientificInputFunction('exp')" title="指数函数">exp</button>
+                    </div>
+                    <div class="function-row">
+                        <button class="btn-function" onclick="scientificInputFunction('sinh')" title="双曲正弦">sinh</button>
+                        <button class="btn-function" onclick="scientificInputFunction('cosh')" title="双曲余弦">cosh</button>
+                        <button class="btn-function" onclick="scientificInputFunction('tanh')" title="双曲正切">tanh</button>
+                        <button class="btn-function" onclick="scientificInputFunction('pow')" title="幂运算">x^y</button>
+                        <button class="btn-constant" onclick="scientificInputConstant('phi')" title="黄金比例">φ</button>
+                    </div>
+                </div>
                 
-                <!-- 第四行 -->
-                <button class="btn btn-number" onclick="scientificInputNumber('1')">1</button>
-                <button class="btn btn-number" onclick="scientificInputNumber('2')">2</button>
-                <button class="btn btn-number" onclick="scientificInputNumber('3')">3</button>
-                <button class="btn btn-operator" onclick="scientificInputOperator('+')">+</button>
-                
-                <!-- 第五行 -->
-                <button class="btn btn-number" onclick="scientificInputNumber('0')" colspan="2">0</button>
-                <button class="btn btn-number" onclick="scientificInputDecimal()">.</button>
+                <div class="scientific-calculator-grid">
+                    <!-- 第一行 -->
+                    <button class="btn btn-clear" onclick="scientificClear()">清除</button>
+                    <button class="btn btn-operator" onclick="scientificInputParenthesis('(')">(</button>
+                    <button class="btn btn-operator" onclick="scientificInputParenthesis(')')">)</button>
+                    <button class="btn btn-clear" onclick="scientificBackspace()">删除</button>
+                    <button class="btn btn-operator" onclick="scientificInputOperator('÷')">÷</button>
+                    
+                    <!-- 第二行 -->
+                    <button class="btn btn-number" onclick="scientificInputNumber('7')">7</button>
+                    <button class="btn btn-number" onclick="scientificInputNumber('8')">8</button>
+                    <button class="btn btn-number" onclick="scientificInputNumber('9')">9</button>
+                    <button class="btn btn-operator" onclick="scientificInputOperator('×')">×</button>
+                    <button class="btn btn-equals" onclick="scientificCalculate()" rowspan="4">=</button>
+                    
+                    <!-- 第三行 -->
+                    <button class="btn btn-number" onclick="scientificInputNumber('4')">4</button>
+                    <button class="btn btn-number" onclick="scientificInputNumber('5')">5</button>
+                    <button class="btn btn-number" onclick="scientificInputNumber('6')">6</button>
+                    <button class="btn btn-operator" onclick="scientificInputOperator('−')">−</button>
+                    
+                    <!-- 第四行 -->
+                    <button class="btn btn-number" onclick="scientificInputNumber('1')">1</button>
+                    <button class="btn btn-number" onclick="scientificInputNumber('2')">2</button>
+                    <button class="btn btn-number" onclick="scientificInputNumber('3')">3</button>
+                    <button class="btn btn-operator" onclick="scientificInputOperator('+')">+</button>
+                    
+                    <!-- 第五行 -->
+                    <button class="btn btn-number" onclick="scientificInputNumber('0')" colspan="2">0</button>
+                    <button class="btn btn-number" onclick="scientificInputDecimal()">.</button>
+                </div>
             </div>
         </div>
     </div>
-    <script src="/js/scientific-calculator.js"></script>
+    <!-- 将主题切换脚本移到 body 底部 -->
+    <script>
+        // 添加深色主题支持
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+        
+        // 页面加载完成后检查主题设置
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-theme');
+            }
+        });
+    </script>
+    
+    <!-- 异步加载计算器脚本 -->
+    <script src="/js/scientific-calculator.js" async></script>
 </body>
 </html>

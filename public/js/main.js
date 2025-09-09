@@ -9,6 +9,7 @@ class CalculatorApp {
         this.currentPage = 'home';
         this.customCalculators = [];
         this.theme = 'light';
+        this.keyboardShortcutsEnabled = true;
         this.init();
     }
 
@@ -142,6 +143,8 @@ class CalculatorApp {
 
         // 创建设置面板
         this.createSettingsPanel();
+        // 加载键盘快捷键状态
+        this.loadKeyboardShortcutsState();
     }
 
     // 创建设置面板
@@ -200,6 +203,26 @@ class CalculatorApp {
                 this.toggleTheme();
             }
         });
+        
+        // 键盘快捷键复选框
+        document.getElementById('keyboard-shortcuts').addEventListener('change', (e) => {
+            // 这里可以添加键盘快捷键的启用/禁用逻辑
+            console.log('键盘快捷键设置:', e.target.checked);
+        });
+        
+        // 管理自定义计算器按钮
+        document.getElementById('manage-custom-calculators').addEventListener('click', () => {
+            this.manageCustomCalculators();
+        });
+    }
+
+    // 管理自定义计算器
+    manageCustomCalculators() {
+        // 先关闭设置面板
+        this.toggleSettings();
+        
+        // 跳转到公式编辑器页面
+        this.switchToCalculator('formula');
     }
 
     // 切换设置面板
@@ -268,6 +291,11 @@ class CalculatorApp {
     // 设置键盘快捷键
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
+            // 如果键盘快捷键被禁用，则直接返回
+            if (!this.keyboardShortcutsEnabled) {
+                return;
+            }
+            
             // 全局快捷键
             if (e.ctrlKey || e.metaKey) {
                 switch (e.key) {
@@ -319,6 +347,21 @@ class CalculatorApp {
                 this.switchToHome();
             }
         });
+    }
+    
+    // 加载键盘快捷键状态
+    loadKeyboardShortcutsState() {
+        const savedState = Storage.get('keyboardShortcutsEnabled', true);
+        this.keyboardShortcutsEnabled = savedState;
+    }
+    
+    // 设置键盘快捷键启用状态
+    setKeyboardShortcutsEnabled(enabled) {
+        this.keyboardShortcutsEnabled = enabled;
+        Storage.set('keyboardShortcutsEnabled', enabled);
+        
+        // 可以在这里添加额外的逻辑，比如显示提示信息
+        console.log(`键盘快捷键 ${enabled ? '已启用' : '已禁用'}`);
     }
 
     // 设置标签页导航

@@ -4,12 +4,304 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>基础计算器</title>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/calculator-layout.css">
-    <link rel="stylesheet" href="/css/calculators.css">
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --border-color: #d9d9d9;
+        }
+        
+        .dark-theme {
+            --bg-color: #1f1f1f;
+            --text-color: #ffffff;
+            --card-bg: #141414;
+            --header-bg: #1f1f1f;
+            --border-color: #434343;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .calculator-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        
+        .calculator-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .dark-theme .calculator-icon {
+            filter: brightness(0.8);
+        }
+        
+        .header {
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            transition: background-color 0.3s;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.6rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        
+        .control-btn:hover {
+            background-color: var(--hover-bg);
+            transform: scale(1.1);
+        }
+        
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.6rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--hover-bg);
+            transform: rotate(15deg);
+        }
+        
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculator-title h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .calculator-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-icon {
+            padding: 6px 10px;
+        }
+        
+        .calculator-display {
+            margin-bottom: 20px;
+        }
+        
+        .display {
+            width: 100%;
+            font-size: 2rem;
+            text-align: right;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        
+        .basic-calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .btn-number, .btn-operator, .btn-clear, .btn-equals {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-number {
+            background-color: #f5f5f5;
+            color: #000;
+        }
+        
+        .dark-theme .btn-number {
+            background-color: #262626;
+            color: #fff;
+        }
+        
+        .btn-number:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .dark-theme .btn-number:hover {
+            background-color: #434343;
+        }
+        
+        .btn-operator {
+            background-color: #1890ff;
+            color: white;
+        }
+        
+        .btn-operator:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-clear {
+            background-color: #ff4d4f;
+            color: white;
+        }
+        
+        .btn-clear:hover {
+            background-color: #ff7875;
+        }
+        
+        .btn-equals {
+            background-color: #52c41a;
+            color: white;
+        }
+        
+        .btn-equals:hover {
+            background-color: #73d13d;
+        }
+        
+        .zero-wide {
+            grid-column: span 2;
+        }
+        
+        .equals-tall {
+            grid-row: span 2;
+        }
+        
+        @media (max-width: 480px) {
+            .calculator-panel {
+                padding: 15px;
+            }
+            
+            .btn-number, .btn-operator, .btn-clear, .btn-equals {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="calculator-container">
+    <div class="container">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+                        <span class="logo-icon">🧮</span>
+                        <span class="logo-text">多功能计算器</span>
+                    </h1>
+                    <div class="header-controls">
+                        <button class="theme-toggle" id="theme-toggle" title="切换主题">
+                            <span class="theme-icon">🌙</span>
+                        </button>
+                        <a href="/" class="control-btn" title="返回首页">
+                            <span class="home-icon">🏠</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
         <div class="calculator-panel">
             <div class="calculator-header">
                 <div class="calculator-title">
@@ -20,14 +312,10 @@
                     <button class="btn btn-icon" onclick="showCalculatorHelp('basic')" title="帮助">
                         <span>❓</span>
                     </button>
-                    <a href="/" class="btn btn-icon" title="返回首页">
-                        <span>🏠</span>
-                    </a>
                 </div>
             </div>
             
             <div class="calculator-display">
-                <div class="display-history" id="basic-history"></div>
                 <input type="text" id="basic-display" class="display" readonly placeholder="0" aria-label="计算结果显示">
             </div>
             
@@ -99,5 +387,19 @@
         </div>
     </div>
     <script src="/js/basic-calculator.js"></script>
+    <script>
+        // 添加深色主题支持
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+        
+        // 页面加载完成后检查主题设置
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-theme');
+            }
+        });
+    </script>
 </body>
 </html>

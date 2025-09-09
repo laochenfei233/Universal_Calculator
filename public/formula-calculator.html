@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公式编辑器</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --border-color: #d9d9d9;
+        }
+        
+        .dark-theme {
+            --bg-color: #1f1f1f;
+            --text-color: #ffffff;
+            --card-bg: #141414;
+            --header-bg: #1f1f1f;
+            --border-color: #434343;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .calculator-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+            padding: 20px;
+        }
+        
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculator-title h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .calculator-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-icon {
+            padding: 6px 10px;
+        }
+        
+        .btn-success {
+            background-color: #52c41a;
+        }
+        
+        .btn-success:hover {
+            background-color: #73d13d;
+        }
+        
+        .btn-warning {
+            background-color: #faad14;
+        }
+        
+        .btn-warning:hover {
+            background-color: #ffc53d;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control, .form-select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus, .form-select:focus, textarea:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: #e6f7ff;
+            border-radius: 4px;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .dark-theme .result {
+            background-color: #112b4d;
+        }
+        
+        .formula-builder {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .components-panel {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+        }
+        
+        .formula-editor {
+            flex: 2;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            min-height: 200px;
+        }
+        
+        .component-item {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .dark-theme .component-item {
+            background-color: #262626;
+            border-color: #434343;
+        }
+        
+        .component-item:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .dark-theme .component-item:hover {
+            background-color: #434343;
+        }
+        
+        .formula-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-family: monospace;
+            box-sizing: border-box;
+        }
+        
+        .variables-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .variable-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .variable-name, .variable-value {
+            flex: 1;
+        }
+        
+        .save-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .logo-preview {
+            width: 50px;
+            height: 50px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .home-nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .home-nav .btn {
+            background-color: #52c41a;
+        }
+        
+        .home-nav .btn:hover {
+            background-color: #73d13d;
+        }
+        
+        .share-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .saved-formulas {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .formula-item {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .formula-item:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .dark-theme .formula-item:hover {
+            background-color: #1a2a3a;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .calculator-actions {
+                align-self: center;
+            }
+            
+            .formula-builder {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator-panel">
+            <div class="calculator-header">
+                <div class="calculator-title">
+                    <span class="calculator-icon">📐</span>
+                    <h2>公式编辑器</h2>
+                </div>
+                <div class="calculator-actions">
+                    <button class="btn btn-icon" onclick="showCalculatorHelp('formula')" title="帮助">
+                        <span>❓</span>
+                    </button>
+                    <a href="/" class="btn btn-icon" title="返回首页">
+                        <span>🏠</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="calculator-section">
+                <div class="formula-builder">
+                    <div class="components-panel">
+                        <h4>组件库</h4>
+                        <div class="component-item" draggable="true" onclick="insertComponent('x')">x</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('y')">y</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('z')">z</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('+')">+</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('-')">-</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('*')">×</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('/')">÷</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('^')">^</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('(')">(</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent(')')">)</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('sqrt(')">√</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('sin(')">sin</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('cos(')">cos</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('log(')">log</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('pi')">π</div>
+                        <div class="component-item" draggable="true" onclick="insertComponent('e')">e</div>
+                    </div>
+                    
+                    <div class="formula-editor">
+                        <h4>公式编辑区</h4>
+                        <textarea id="formulaInput" class="formula-input" placeholder="在此输入或构建您的公式，例如：x^2 + 2*x + 1"></textarea>
+                        <button onclick="calculateFormula()" class="btn" style="margin-top: 10px;">计算公式</button>
+                    </div>
+                </div>
+                
+                <div class="variables-section">
+                    <h4>变量定义</h4>
+                    <div id="variablesContainer">
+                        <div class="variable-row">
+                            <input type="text" class="form-control variable-name" placeholder="变量名 (如 x)" value="x">
+                            <input type="number" class="form-control variable-value" placeholder="变量值" value="0">
+                            <button class="btn" onclick="addVariable()">+</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="formulaResult" class="result"></div>
+                
+                <div class="save-section">
+                    <h4>保存公式</h4>
+                    <div class="form-group">
+                        <label class="form-label">公式名称</label>
+                        <input type="text" id="formulaName" class="form-control" placeholder="请输入公式名称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">选择图标</label>
+                        <div style="display: flex; align-items: center;">
+                            <div class="logo-preview" id="logoPreview">📐</div>
+                            <select id="logoSelect" class="form-control" onchange="updateLogoPreview()">
+                                <option value="📐">📐</option>
+                                <option value="🧮">🧮</option>
+                                <option value="🔢">🔢</option>
+                                <option value="📊">📊</option>
+                                <option value="📈">📈</option>
+                                <option value="💻">💻</option>
+                                <option value="🔬">🔬</option>
+                                <option value="🎓">🎓</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button onclick="saveFormula()" class="btn btn-success">保存到首页</button>
+                </div>
+                
+                <div class="share-section">
+                    <h4>分享公式</h4>
+                    <button onclick="exportFormula()" class="btn btn-warning">导出公式</button>
+                    <button onclick="importFormula()" class="btn">导入公式</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="handleImportFile()">
+                </div>
+                
+                <div class="saved-formulas">
+                    <h4>已保存的公式</h4>
+                    <div id="savedFormulasList">
+                        <!-- 已保存的公式将在这里显示 -->
+                    </div>
+                </div>
+                
+                <div class="home-nav">
+                    <a href="/" class="btn">🏠 返回首页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 添加深色主题支持
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+        
+        // 页面加载完成后检查主题设置
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-theme');
+            }
+            
+            // 加载已保存的公式
+            loadSavedFormulas();
+        });
+        
+        // 插入组件到公式编辑区
+        function insertComponent(component) {
+            const formulaInput = document.getElementById('formulaInput');
+            const startPos = formulaInput.selectionStart;
+            const endPos = formulaInput.selectionEnd;
+            const text = formulaInput.value;
+            
+            formulaInput.value = text.substring(0, startPos) + component + text.substring(endPos);
+            formulaInput.focus();
+            formulaInput.setSelectionRange(startPos + component.length, startPos + component.length);
+        }
+        
+        // 添加变量
+        function addVariable() {
+            const container = document.getElementById('variablesContainer');
+            const variableRow = document.createElement('div');
+            variableRow.className = 'variable-row';
+            variableRow.innerHTML = `
+                <input type="text" class="form-control variable-name" placeholder="变量名 (如 x)">
+                <input type="number" class="form-control variable-value" placeholder="变量值">
+                <button class="btn" onclick="removeVariable(this)">-</button>
+            `;
+            container.appendChild(variableRow);
+        }
+        
+        // 移除变量
+        function removeVariable(button) {
+            button.parentElement.remove();
+        }
+        
+        // 计算公式
+        function calculateFormula() {
+            const formula = document.getElementById('formulaInput').value;
+            if (!formula) {
+                alert('请输入公式');
+                return;
+            }
+            
+            // 获取变量值
+            const variables = {};
+            const variableRows = document.querySelectorAll('.variable-row');
+            variableRows.forEach(row => {
+                const name = row.querySelector('.variable-name').value;
+                const value = parseFloat(row.querySelector('.variable-value').value);
+                if (name && !isNaN(value)) {
+                    variables[name] = value;
+                }
+            });
+            
+            // 这里应该有一个公式计算引擎
+            // 目前只是一个示例实现
+            const result = evaluateFormula(formula, variables);
+            
+            document.getElementById('formulaResult').innerHTML = `
+                <h3>计算结果</h3>
+                <p><strong>公式:</strong> ${formula}</p>
+                <p><strong>变量:</strong> ${JSON.stringify(variables)}</p>
+                <p><strong>结果:</strong> ${result}</p>
+            `;
+        }
+        
+        // 简化的公式计算实现
+        function evaluateFormula(formula, variables) {
+            // 这里应该有一个真正的公式计算引擎
+            // 目前只是一个示例实现
+            try {
+                // 替换变量
+                let expression = formula;
+                for (const [name, value] of Object.entries(variables)) {
+                    const regex = new RegExp(`\\b${name}\\b`, 'g');
+                    expression = expression.replace(regex, value);
+                }
+                
+                // 替换数学函数
+                expression = expression.replace(/sqrt\(/g, 'Math.sqrt(');
+                expression = expression.replace(/sin\(/g, 'Math.sin(');
+                expression = expression.replace(/cos\(/g, 'Math.cos(');
+                expression = expression.replace(/log\(/g, 'Math.log10(');
+                expression = expression.replace(/\^/g, '**');
+                expression = expression.replace(/pi/g, 'Math.PI');
+                expression = expression.replace(/e/g, 'Math.E');
+                
+                // 计算表达式
+                // 注意：在实际应用中，应该使用更安全的表达式解析器而不是eval
+                const result = Function('"use strict"; return (' + expression + ')')();
+                return typeof result === 'number' ? result.toFixed(6) : result;
+            } catch (e) {
+                return '计算错误: ' + e.message;
+            }
+        }
+        
+        // 更新图标预览
+        function updateLogoPreview() {
+            const logo = document.getElementById('logoSelect').value;
+            document.getElementById('logoPreview').textContent = logo;
+        }
+        
+        // 保存公式
+        function saveFormula() {
+            const formula = document.getElementById('formulaInput').value;
+            const name = document.getElementById('formulaName').value;
+            const logo = document.getElementById('logoSelect').value;
+            
+            if (!formula) {
+                alert('请输入公式');
+                return;
+            }
+            
+            if (!name) {
+                alert('请输入公式名称');
+                return;
+            }
+            
+            // 获取变量值
+            const variables = {};
+            const variableRows = document.querySelectorAll('.variable-row');
+            variableRows.forEach(row => {
+                const varName = row.querySelector('.variable-name').value;
+                const varValue = parseFloat(row.querySelector('.variable-value').value);
+                if (varName && !isNaN(varValue)) {
+                    variables[varName] = varValue;
+                }
+            });
+            
+            // 创建公式对象
+            const formulaObj = {
+                id: Date.now(),
+                name: name,
+                formula: formula,
+                variables: variables,
+                logo: logo,
+                createdAt: new Date().toISOString()
+            };
+            
+            // 从localStorage获取已保存的公式
+            let savedFormulas = JSON.parse(localStorage.getItem('savedFormulas') || '[]');
+            
+            // 添加新公式
+            savedFormulas.push(formulaObj);
+            
+            // 保存到localStorage
+            localStorage.setItem('savedFormulas', JSON.stringify(savedFormulas));
+            
+            // 更新UI
+            loadSavedFormulas();
+            
+            alert('公式已保存到首页！');
+        }
+        
+        // 加载已保存的公式
+        function loadSavedFormulas() {
+            const savedFormulas = JSON.parse(localStorage.getItem('savedFormulas') || '[]');
+            const container = document.getElementById('savedFormulasList');
+            
+            if (savedFormulas.length === 0) {
+                container.innerHTML = '<p>暂无已保存的公式</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            savedFormulas.forEach(formula => {
+                const formulaElement = document.createElement('div');
+                formulaElement.className = 'formula-item';
+                formulaElement.innerHTML = `
+                    <div><strong>${formula.name}</strong></div>
+                    <div>${formula.formula}</div>
+                    <div style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                        图标: ${formula.logo} | 创建时间: ${new Date(formula.createdAt).toLocaleString()}
+                    </div>
+                `;
+                formulaElement.onclick = () => loadFormula(formula);
+                container.appendChild(formulaElement);
+            });
+        }
+        
+        // 加载公式到编辑器
+        function loadFormula(formula) {
+            document.getElementById('formulaInput').value = formula.formula;
+            document.getElementById('formulaName').value = formula.name;
+            document.getElementById('logoSelect').value = formula.logo;
+            updateLogoPreview();
+            
+            // 清空现有变量
+            const container = document.getElementById('variablesContainer');
+            container.innerHTML = '';
+            
+            // 添加变量
+            for (const [name, value] of Object.entries(formula.variables)) {
+                const variableRow = document.createElement('div');
+                variableRow.className = 'variable-row';
+                variableRow.innerHTML = `
+                    <input type="text" class="form-control variable-name" placeholder="变量名 (如 x)" value="${name}">
+                    <input type="number" class="form-control variable-value" placeholder="变量值" value="${value}">
+                    <button class="btn" onclick="removeVariable(this)">-</button>
+                `;
+                container.appendChild(variableRow);
+            }
+            
+            // 如果没有变量，添加一个空的变量行
+            if (Object.keys(formula.variables).length === 0) {
+                addVariable();
+            }
+        }
+        
+        // 导出公式
+        function exportFormula() {
+            const savedFormulas = JSON.parse(localStorage.getItem('savedFormulas') || '[]');
+            
+            if (savedFormulas.length === 0) {
+                alert('没有可导出的公式');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(savedFormulas, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'calculator-formulas.json';
+            link.click();
+        }
+        
+        // 导入公式
+        function importFormula() {
+            document.getElementById('importFile').click();
+        }
+        
+        // 处理导入文件
+        function handleImportFile() {
+            const file = document.getElementById('importFile').files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const formulas = JSON.parse(e.target.result);
+                    
+                    // 从localStorage获取已保存的公式
+                    let savedFormulas = JSON.parse(localStorage.getItem('savedFormulas') || '[]');
+                    
+                    // 合并公式（避免重复）
+                    formulas.forEach(newFormula => {
+                        const exists = savedFormulas.some(f => f.id === newFormula.id);
+                        if (!exists) {
+                            savedFormulas.push(newFormula);
+                        }
+                    });
+                    
+                    // 保存到localStorage
+                    localStorage.setItem('savedFormulas', JSON.stringify(savedFormulas));
+                    
+                    // 更新UI
+                    loadSavedFormulas();
+                    
+                    alert('公式导入成功！');
+                } catch (e) {
+                    alert('导入失败：文件格式错误');
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // 显示帮助信息
+        function showCalculatorHelp(type) {
+            alert('公式编辑器帮助：\n\n1. 从组件库中拖拽或点击组件构建公式\n2. 在变量定义区设置变量值\n3. 点击计算公式按钮查看结果\n4. 可以保存公式到首页，方便下次使用\n5. 支持公式导出和导入功能');
+        }
+    </script>
+</body>
+</html>

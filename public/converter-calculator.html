@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单位换算器</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --border-color: #d9d9d9;
+        }
+        
+        .dark-theme {
+            --bg-color: #1f1f1f;
+            --text-color: #ffffff;
+            --card-bg: #141414;
+            --header-bg: #1f1f1f;
+            --border-color: #434343;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .calculator-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+            padding: 20px;
+        }
+        
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculator-title h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .calculator-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-icon {
+            padding: 6px 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control, .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: #e6f7ff;
+            border-radius: 4px;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .dark-theme .result {
+            background-color: #112b4d;
+        }
+        
+        .converter-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .converter-input {
+            flex: 1;
+        }
+        
+        .converter-select {
+            flex: 1;
+        }
+        
+        .converter-arrow {
+            font-size: 1.5rem;
+            color: #1890ff;
+        }
+        
+        .home-nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .home-nav .btn {
+            background-color: #52c41a;
+        }
+        
+        .home-nav .btn:hover {
+            background-color: #73d13d;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .calculator-actions {
+                align-self: center;
+            }
+            
+            .converter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .converter-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator-panel">
+            <div class="calculator-header">
+                <div class="calculator-title">
+                    <span class="calculator-icon">🔄</span>
+                    <h2>单位换算器</h2>
+                </div>
+                <div class="calculator-actions">
+                    <button class="btn btn-icon" onclick="showCalculatorHelp('converter')" title="帮助">
+                        <span>❓</span>
+                    </button>
+                    <a href="/" class="btn btn-icon" title="返回首页">
+                        <span>🏠</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="calculator-section">
+                <div class="form-group">
+                    <label class="form-label">换算类型</label>
+                    <select id="conversionType" class="form-select" onchange="updateUnits()">
+                        <option value="length">长度</option>
+                        <option value="weight">重量</option>
+                        <option value="temperature">温度</option>
+                        <option value="area">面积</option>
+                        <option value="volume">体积</option>
+                    </select>
+                </div>
+                
+                <div class="converter-row">
+                    <div class="converter-input">
+                        <label class="form-label">数值</label>
+                        <input type="number" id="inputValue" class="form-control" placeholder="请输入数值" value="1">
+                    </div>
+                    <div class="converter-select">
+                        <label class="form-label">从</label>
+                        <select id="fromUnit" class="form-select"></select>
+                    </div>
+                    <div class="converter-arrow">→</div>
+                    <div class="converter-select">
+                        <label class="form-label">到</label>
+                        <select id="toUnit" class="form-select"></select>
+                    </div>
+                </div>
+                
+                <button onclick="convertUnits()" class="btn">换算</button>
+                
+                <div id="converterResult" class="result"></div>
+                
+                <div class="home-nav">
+                    <a href="/" class="btn">🏠 返回首页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 单位定义
+        const units = {
+            length: {
+                name: "长度",
+                units: {
+                    "mm": "毫米",
+                    "cm": "厘米",
+                    "m": "米",
+                    "km": "千米",
+                    "in": "英寸",
+                    "ft": "英尺",
+                    "yd": "码",
+                    "mi": "英里"
+                },
+                conversions: {
+                    "mm": 1,
+                    "cm": 10,
+                    "m": 1000,
+                    "km": 1000000,
+                    "in": 25.4,
+                    "ft": 304.8,
+                    "yd": 914.4,
+                    "mi": 1609344
+                }
+            },
+            weight: {
+                name: "重量",
+                units: {
+                    "mg": "毫克",
+                    "g": "克",
+                    "kg": "千克",
+                    "t": "吨",
+                    "oz": "盎司",
+                    "lb": "磅"
+                },
+                conversions: {
+                    "mg": 1,
+                    "g": 1000,
+                    "kg": 1000000,
+                    "t": 1000000000,
+                    "oz": 28349.5,
+                    "lb": 453592
+                }
+            },
+            temperature: {
+                name: "温度",
+                units: {
+                    "c": "摄氏度",
+                    "f": "华氏度",
+                    "k": "开尔文"
+                },
+                // 特殊处理
+                conversions: {}
+            },
+            area: {
+                name: "面积",
+                units: {
+                    "mm2": "平方毫米",
+                    "cm2": "平方厘米",
+                    "m2": "平方米",
+                    "ha": "公顷",
+                    "km2": "平方千米",
+                    "in2": "平方英寸",
+                    "ft2": "平方英尺",
+                    "ac": "英亩"
+                },
+                conversions: {
+                    "mm2": 1,
+                    "cm2": 100,
+                    "m2": 1000000,
+                    "ha": 10000000000,
+                    "km2": 1000000000000,
+                    "in2": 645.16,
+                    "ft2": 92903.04,
+                    "ac": 4046856422.4
+                }
+            },
+            volume: {
+                name: "体积",
+                units: {
+                    "ml": "毫升",
+                    "l": "升",
+                    "m3": "立方米",
+                    "in3": "立方英寸",
+                    "ft3": "立方英尺",
+                    "gal": "加仑"
+                },
+                conversions: {
+                    "ml": 1,
+                    "l": 1000,
+                    "m3": 1000000,
+                    "in3": 16.3871,
+                    "ft3": 28316.8,
+                    "gal": 3785.41
+                }
+            }
+        };
+        
+        // 添加深色主题支持
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+        
+        // 页面加载完成后检查主题设置
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-theme');
+            }
+            
+            // 初始化单位下拉框
+            updateUnits();
+        });
+        
+        // 更新单位下拉框
+        function updateUnits() {
+            const conversionType = document.getElementById('conversionType').value;
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            
+            // 清空下拉框
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            // 填充单位选项
+            for (const unit in units[conversionType].units) {
+                const option1 = document.createElement('option');
+                option1.value = unit;
+                option1.textContent = units[conversionType].units[unit];
+                fromUnit.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = unit;
+                option2.textContent = units[conversionType].units[unit];
+                toUnit.appendChild(option2);
+            }
+            
+            // 设置默认选中项
+            fromUnit.value = Object.keys(units[conversionType].units)[0];
+            toUnit.value = Object.keys(units[conversionType].units)[1] || Object.keys(units[conversionType].units)[0];
+        }
+        
+        // 单位换算
+        function convertUnits() {
+            const conversionType = document.getElementById('conversionType').value;
+            const inputValue = parseFloat(document.getElementById('inputValue').value);
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            
+            if (isNaN(inputValue)) {
+                alert('请输入有效的数值');
+                return;
+            }
+            
+            let result;
+            
+            if (conversionType === 'temperature') {
+                // 温度换算特殊处理
+                result = convertTemperature(inputValue, fromUnit, toUnit);
+            } else {
+                // 其他单位换算
+                const fromFactor = units[conversionType].conversions[fromUnit];
+                const toFactor = units[conversionType].conversions[toUnit];
+                result = inputValue * fromFactor / toFactor;
+            }
+            
+            document.getElementById('converterResult').innerHTML = `
+                <h3>换算结果</h3>
+                <p><strong>${inputValue} ${units[conversionType].units[fromUnit]} = ${result.toFixed(6)} ${units[conversionType].units[toUnit]}</strong></p>
+            `;
+        }
+        
+        // 温度换算
+        function convertTemperature(value, from, to) {
+            // 先转换为摄氏度
+            let celsius;
+            switch (from) {
+                case 'c':
+                    celsius = value;
+                    break;
+                case 'f':
+                    celsius = (value - 32) * 5/9;
+                    break;
+                case 'k':
+                    celsius = value - 273.15;
+                    break;
+            }
+            
+            // 从摄氏度转换为目标单位
+            switch (to) {
+                case 'c':
+                    return celsius;
+                case 'f':
+                    return celsius * 9/5 + 32;
+                case 'k':
+                    return celsius + 273.15;
+            }
+        }
+        
+        // 显示帮助信息
+        function showCalculatorHelp(type) {
+            alert('单位换算器帮助：\n\n1. 选择换算类型（长度、重量、温度等）\n2. 输入要换算的数值\n3. 选择源单位和目标单位\n4. 点击换算按钮查看结果');
+        }
+    </script>
+</body>
+</html>

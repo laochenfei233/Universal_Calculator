@@ -1,9 +1,11 @@
 const app = require('./app');
 const sslConfig = require('./utils/sslConfig');
 const { logger } = require('./utils/logger');
+const config = require('./config/production');
 
-const HTTP_PORT = process.env.HTTP_PORT || 19246;
-const HTTPS_PORT = process.env.HTTPS_PORT || 19446;
+// 从配置文件获取端口，默认为3000
+const PORT = config.port || process.env.PORT || 3000;
+const HTTP_PORT = PORT; // 添加这行以修复端口未定义问题
 
 // 初始化SSL配置
 async function startServer() {

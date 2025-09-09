@@ -4,139 +4,393 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>公积金计算器</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/calculator.css">
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --border-color: #d9d9d9;
+        }
+        
+        .dark-theme {
+            --bg-color: #1f1f1f;
+            --text-color: #ffffff;
+            --card-bg: #141414;
+            --header-bg: #1f1f1f;
+            --border-color: #434343;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .calculator-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+        }
+        
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculator-title h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .calculator-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-icon {
+            padding: 6px 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid #1890ff;
+            color: #1890ff;
+            font-weight: 500;
+        }
+        
+        .tab:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark-theme .tab:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .tab-content {
+            padding: 20px;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+        
+        .calculator-section {
+            padding: 20px 0;
+        }
+        
+        .formula-image {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .formula-section {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        .dark-theme .formula-section {
+            background-color: #1a2b3c;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control, .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: #e6f7ff;
+            border-radius: 4px;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .dark-theme .result {
+            background-color: #112b4d;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .calculator-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .calculator-actions {
+                align-self: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="calculator-container">
+    <div class="container">
         <div class="calculator-panel">
             <div class="calculator-header">
                 <div class="calculator-title">
-                    <span class="calculator-icon">🏦</span>
+                    <span class="calculator-icon" aria-hidden="true">[图标]</span>
                     <h2>公积金计算器</h2>
                 </div>
                 <div class="calculator-actions">
                     <button class="btn btn-icon" onclick="showCalculatorHelp('housing-fund')" title="帮助">
-                        <span>❓</span>
+                        <span aria-hidden="true">[?]</span>
                     </button>
-                    <button class="btn btn-icon" onclick="calculatorApp.switchToHome()" title="返回首页">
-                        <span>🏠</span>
-                    </button>
+                    <a href="/" class="btn btn-icon" title="返回首页">
+                        <span aria-hidden="true">[主页]</span>
+                    </a>
                 </div>
             </div>
             
-            <div class="tab">
-                <button class="tablinks active" onclick="openTab(event, 'payment')">公积金缴费计算</button>
-                <button class="tablinks" onclick="openTab(event, 'adjustment')">基数调整计算</button>
-                <button class="tablinks" onclick="openTab(event, 'loan')">贷款额度计算</button>
-                <button class="tablinks" onclick="openTab(event, 'withdrawal')">提取额度计算</button>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('payment')">公积金缴费计算</div>
+                <div class="tab" onclick="switchTab('adjustment')">基数调整计算</div>
+                <div class="tab" onclick="switchTab('loan')">贷款额度计算</div>
+                <div class="tab" onclick="switchTab('withdrawal')">提取额度计算</div>
             </div>
-            
-            <!-- 公积金缴费计算 -->
-            <div id="payment" class="tabcontent" style="display: block;">
-                <div class="calculator-section">
-                    <div class="form-group">
-                        <label for="salary">月工资 (元)</label>
-                        <input type="number" id="salary" placeholder="请输入您的月工资">
+
+            <div class="tab-content">
+                <!-- 公积金缴费计算 -->
+                <div class="tab-pane active" id="payment">
+                    <div class="calculator-section">
+                        <div class="form-group">
+                            <label for="salary" class="form-label">月工资 (元)</label>
+                            <input type="number" id="salary" class="form-control" placeholder="请输入您的月工资">
+                        </div>
+                        <div class="form-group">
+                            <label for="base" class="form-label">公积金缴费基数 (元，可选)</label>
+                            <input type="number" id="base" class="form-control" placeholder="如不填写，将根据工资自动计算">
+                        </div>
+                        <div class="form-group">
+                            <label for="rate" class="form-label">公积金缴费比例 (如不填写，默认为12%)</label>
+                            <input type="number" id="rate" class="form-control" placeholder="请输入缴费比例(如12表示12%)" value="12">
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="form-label">城市</label>
+                            <select id="city" class="form-select">
+                                <option value="beijing">北京</option>
+                                <option value="national" selected>全国标准</option>
+                            </select>
+                        </div>
+                        <button onclick="calculatePayment()" class="btn">计算</button>
+                        <div id="paymentResult" class="result"></div>
                     </div>
-                    <div class="form-group">
-                        <label for="base">公积金缴费基数 (元，可选)</label>
-                        <input type="number" id="base" placeholder="如不填写，将根据工资自动计算">
-                    </div>
-                    <div class="form-group">
-                        <label for="rate">公积金缴费比例 (如不填写，默认为12%)</label>
-                        <input type="number" id="rate" placeholder="请输入缴费比例(如12表示12%)" value="12">
-                    </div>
-                    <div class="form-group">
-                        <label for="city">城市</label>
-                        <select id="city">
-                            <option value="beijing">北京</option>
-                            <option value="national" selected>全国标准</option>
-                        </select>
-                    </div>
-                    <button onclick="calculatePayment()">计算</button>
-                    <div id="paymentResult" class="result"></div>
                 </div>
-            </div>
-            
-            <!-- 公积金基数调整计算 -->
-            <div id="adjustment" class="tabcontent">
-                <div class="calculator-section">
-                    <div class="form-group">
-                        <label for="averageSalary">上年度职工月平均工资 (元)</label>
-                        <input type="number" id="averageSalary" placeholder="请输入上年度职工月平均工资">
+                
+                <!-- 公积金基数调整计算 -->
+                <div class="tab-pane" id="adjustment">
+                    <div class="calculator-section">
+                        <div class="form-group">
+                            <label for="averageSalary" class="form-label">上年度职工月平均工资 (元)</label>
+                            <input type="number" id="averageSalary" class="form-control" placeholder="请输入上年度职工月平均工资">
+                        </div>
+                        <div class="form-group">
+                            <label for="personalSalary" class="form-label">个人月平均工资 (元)</label>
+                            <input type="number" id="personalSalary" class="form-control" placeholder="请输入您的月平均工资">
+                        </div>
+                        <div class="form-group">
+                            <label for="currentBase" class="form-label">当前公积金基数 (元)</label>
+                            <input type="number" id="currentBase" class="form-control" placeholder="请输入当前公积金基数">
+                        </div>
+                        <div class="form-group">
+                            <label for="adjustmentRate" class="form-label">公积金缴费比例 (如不填写，默认为12%)</label>
+                            <input type="number" id="adjustmentRate" class="form-control" placeholder="请输入缴费比例(如12表示12%)" value="12">
+                        </div>
+                        <button onclick="calculateAdjustment()" class="btn">计算</button>
+                        <div id="adjustmentResult" class="result"></div>
                     </div>
-                    <div class="form-group">
-                        <label for="personalSalary">个人月平均工资 (元)</label>
-                        <input type="number" id="personalSalary" placeholder="请输入您的月平均工资">
-                    </div>
-                    <div class="form-group">
-                        <label for="currentBase">当前公积金基数 (元)</label>
-                        <input type="number" id="currentBase" placeholder="请输入当前公积金基数">
-                    </div>
-                    <div class="form-group">
-                        <label for="adjustmentRate">公积金缴费比例 (如不填写，默认为12%)</label>
-                        <input type="number" id="adjustmentRate" placeholder="请输入缴费比例(如12表示12%)" value="12">
-                    </div>
-                    <button onclick="calculateAdjustment()">计算</button>
-                    <div id="adjustmentResult" class="result"></div>
                 </div>
-            </div>
-            
-            <!-- 公积金贷款额度计算 -->
-            <div id="loan" class="tabcontent">
-                <div class="calculator-section">
-                    <div class="form-group">
-                        <label for="loanBase">公积金缴费基数 (元)</label>
-                        <input type="number" id="loanBase" placeholder="请输入公积金缴费基数">
+                
+                <!-- 公积金贷款额度计算 -->
+                <div class="tab-pane" id="loan">
+                    <div class="calculator-section">
+                        <div class="form-group">
+                            <label for="loanBase" class="form-label">公积金缴费基数 (元)</label>
+                            <input type="number" id="loanBase" class="form-control" placeholder="请输入公积金缴费基数">
+                        </div>
+                        <div class="form-group">
+                            <label for="balance" class="form-label">公积金账户余额 (元)</label>
+                            <input type="number" id="balance" class="form-control" placeholder="请输入公积金账户余额">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthlyIncome" class="form-label">月收入 (元)</label>
+                            <input type="number" id="monthlyIncome" class="form-control" placeholder="请输入您的月收入">
+                        </div>
+                        <div class="form-group">
+                            <label for="years" class="form-label">贷款年限 (年)</label>
+                            <input type="number" id="years" class="form-control" placeholder="请输入贷款年限" value="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="loanRate" class="form-label">贷款利率 (如不填写，默认为3.1%)</label>
+                            <input type="number" id="loanRate" class="form-control" placeholder="请输入贷款利率" step="0.01" value="3.1">
+                        </div>
+                        <button onclick="calculateLoan()" class="btn">计算</button>
+                        <div id="loanResult" class="result"></div>
                     </div>
-                    <div class="form-group">
-                        <label for="balance">公积金账户余额 (元)</label>
-                        <input type="number" id="balance" placeholder="请输入公积金账户余额">
-                    </div>
-                    <div class="form-group">
-                        <label for="monthlyIncome">月收入 (元)</label>
-                        <input type="number" id="monthlyIncome" placeholder="请输入您的月收入">
-                    </div>
-                    <div class="form-group">
-                        <label for="years">贷款年限 (年)</label>
-                        <input type="number" id="years" placeholder="请输入贷款年限" value="30">
-                    </div>
-                    <div class="form-group">
-                        <label for="loanRate">贷款利率 (如不填写，默认为3.1%)</label>
-                        <input type="number" id="loanRate" placeholder="请输入贷款利率" step="0.01" value="3.1">
-                    </div>
-                    <button onclick="calculateLoan()">计算</button>
-                    <div id="loanResult" class="result"></div>
                 </div>
-            </div>
-            
-            <!-- 公积金提取额度计算 -->
-            <div id="withdrawal" class="tabcontent">
-                <div class="calculator-section">
-                    <div class="form-group">
-                        <label for="withdrawalBalance">公积金账户余额 (元)</label>
-                        <input type="number" id="withdrawalBalance" placeholder="请输入公积金账户余额">
+                
+                <!-- 公积金提取额度计算 -->
+                <div class="tab-pane" id="withdrawal">
+                    <div class="calculator-section">
+                        <div class="form-group">
+                            <label for="withdrawalBalance" class="form-label">公积金账户余额 (元)</label>
+                            <input type="number" id="withdrawalBalance" class="form-control" placeholder="请输入公积金账户余额">
+                        </div>
+                        <div class="form-group">
+                            <label for="withdrawalType" class="form-label">提取类型</label>
+                            <select id="withdrawalType" class="form-select" onchange="toggleRentField()">
+                                <option value="rent">租房提取</option>
+                                <option value="medical">医疗提取</option>
+                                <option value="education">教育提取</option>
+                                <option value="other">其他提取</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="rentField">
+                            <label for="monthlyRent" class="form-label">月租金 (元)</label>
+                            <input type="number" id="monthlyRent" class="form-control" placeholder="请输入月租金">
+                        </div>
+                        <button onclick="calculateWithdrawal()" class="btn">计算</button>
+                        <div id="withdrawalResult" class="result"></div>
                     </div>
-                    <div class="form-group">
-                        <label for="withdrawalType">提取类型</label>
-                        <select id="withdrawalType" onchange="toggleRentField()">
-                            <option value="rent">租房提取</option>
-                            <option value="medical">医疗提取</option>
-                            <option value="education">教育提取</option>
-                            <option value="other">其他提取</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="rentField">
-                        <label for="monthlyRent">月租金 (元)</label>
-                        <input type="number" id="monthlyRent" placeholder="请输入月租金">
-                    </div>
-                    <button onclick="calculateWithdrawal()">计算</button>
-                    <div id="withdrawalResult" class="result"></div>
                 </div>
             </div>
         </div>
     </div>
+    
     <script src="/js/housing-fund-calculator.js"></script>
+    <script>
+        // 添加深色主题支持
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        }
+        
+        // 页面加载完成后检查主题设置
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-theme');
+            }
+            
+            // 初始化租房字段显示状态
+            toggleRentField();
+        });
+        
+        // 切换标签页
+        function switchTab(tabName) {
+            // 隐藏所有标签页内容
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            // 移除所有标签的活动状态
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的标签页内容
+            document.getElementById(tabName).classList.add('active');
+            
+            // 设置选中标签为活动状态
+            event.target.classList.add('active');
+        }
+        
+        // 切换租房字段显示
+        function toggleRentField() {
+            const withdrawalType = document.getElementById('withdrawalType').value;
+            const rentField = document.getElementById('rentField');
+            
+            if (withdrawalType === 'rent') {
+                rentField.style.display = 'block';
+            } else {
+                rentField.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

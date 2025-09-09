@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字转换器</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --border-color: #d9d9d9;
+        }
+        
+        .dark-theme {
+            --bg-color: #1f1f1f;
+            --text-color: #ffffff;
+            --card-bg: #141414;
+            --header-bg: #1f1f1f;
+            --border-color: #434343;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .calculator-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+            padding: 20px;
+        }
+        
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculator-title h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .calculator-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        
+        .btn-icon {
+            padding: 6px 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control, .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: #e6f7ff;
+            border-radius: 4px;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .dark-theme .result {
+            background-color: #112b4d;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid #1890ff;
+            color: #1890ff;
+            font-weight: 500;
+        }
+        
+        .tab:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark-theme .tab:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .converter-section {
+            display: none;
+        }
+        
+        .converter-section.active {
+            display: block;
+        }
+        
+        .home-nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .home-nav .btn {
+            background-color: #52c41a;
+        }
+        
+        .home-nav .btn:hover {
+            background-color: #73d13d;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .calculator-actions {
+                align-self: center;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator-panel">
+            <div class="calculator-header">
+                <div class="calculator-title">
+                    <span class="calculator-icon">🔤</span>
+                    <h2>数字转换器</h2>
+                </div>
+                <div class="calculator-actions">
+                    <button class="btn btn-icon" onclick="showCalculatorHelp('number')" title="帮助">
+                        <span>❓</span>
+                    </button>
+                    <a href="/" class="btn btn-icon" title="返回首页">
+                        <span>🏠</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('arabicToChinese')">阿拉伯数字转中文</div>
+                <div class="tab" onclick="switchTab('chineseToArabic')">中文转阿拉伯数字</div>
+                <div class="tab" onclick="switchTab('baseConverter')">进制转换</div>
+            </div>
+            
+            <div class="converter-section active" id="arabicToChinese">
+                <div class="form-group">
+                    <label class="form-label">阿拉伯数字</label>
+                    <input type="number" id="arabicNumber" class="form-control" placeholder="请输入阿拉伯数字">
+                </div>
+                <button onclick="convertArabicToChinese()" class="btn">转换为中文</button>
+                <div id="arabicToChineseResult" class="result"></div>
+            </div>
+            
+            <div class="converter-section" id="chineseToArabic">
+                <div class="form-group">
+                    <label class="form-label">中文数字</label>
+                    <input type="text" id="chineseNumber" class="form-control" placeholder="请输入中文数字">
+                </div>
+                <button onclick="convertChineseToArabic()" class="btn">转换为阿拉伯数字</button>
+                <div id="chineseToArabicResult" class="result"></div>
+            </div>
+            
+            <div class="converter-section" id="baseConverter">
+                <div class="form-group">
+                    <label class="form-label">数值</label>
+                    <input type="text" id="baseValue" class="form-control" placeholder="请输入数值">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">源进制 (2-36)</label>
+                    <input type="number" id="fromBase" class="form-control" placeholder="请输入源进制" value="10" min="2" max="36">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">目标进制 (2-36)</label>
+                    <input type="number" id="toBase" class="form-control" placeholder="请输入目标进制" value="2" min="2" max="36">
+                </div>
+                <button onclick="convertBase()" class="btn">进制转换</button>
+                <div id="baseConverterResult" class="result"></div>
+                
+                <div class="home-nav">
+                    <a href="/" class="btn">🏠 返回首页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 添加深色主题支持
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+        
+        // 页面加载完成后检查主题设置
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-theme');
+            }
+        });
+        
+        // 切换标签页
+        function switchTab(tabId) {
+            // 隐藏所有部分
+            document.querySelectorAll('.converter-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 移除所有标签的活动状态
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的部分
+            document.getElementById(tabId).classList.add('active');
+            
+            // 设置选中标签为活动状态
+            event.target.classList.add('active');
+        }
+        
+        // 阿拉伯数字转中文
+        function convertArabicToChinese() {
+            const number = document.getElementById('arabicNumber').value;
+            
+            if (!number) {
+                alert('请输入数字');
+                return;
+            }
+            
+            const result = numberToChinese(number);
+            document.getElementById('arabicToChineseResult').innerHTML = `
+                <h3>转换结果</h3>
+                <p><strong>${number} → ${result}</strong></p>
+            `;
+        }
+        
+        // 中文转阿拉伯数字
+        function convertChineseToArabic() {
+            const chinese = document.getElementById('chineseNumber').value;
+            
+            if (!chinese) {
+                alert('请输入中文数字');
+                return;
+            }
+            
+            const result = chineseToNumber(chinese);
+            document.getElementById('chineseToArabicResult').innerHTML = `
+                <h3>转换结果</h3>
+                <p><strong>${chinese} → ${result}</strong></p>
+            `;
+        }
+        
+        // 进制转换
+        function convertBase() {
+            const value = document.getElementById('baseValue').value;
+            const fromBase = parseInt(document.getElementById('fromBase').value);
+            const toBase = parseInt(document.getElementById('toBase').value);
+            
+            if (!value) {
+                alert('请输入数值');
+                return;
+            }
+            
+            if (isNaN(fromBase) || fromBase < 2 || fromBase > 36) {
+                alert('请输入有效的源进制 (2-36)');
+                return;
+            }
+            
+            if (isNaN(toBase) || toBase < 2 || toBase > 36) {
+                alert('请输入有效的目标进制 (2-36)');
+                return;
+            }
+            
+            try {
+                const decimalValue = parseInt(value, fromBase);
+                if (isNaN(decimalValue)) {
+                    throw new Error('无效的数值');
+                }
+                const result = decimalValue.toString(toBase);
+                document.getElementById('baseConverterResult').innerHTML = `
+                    <h3>转换结果</h3>
+                    <p><strong>${value} (base ${fromBase}) → ${result} (base ${toBase})</strong></p>
+                `;
+            } catch (e) {
+                alert('转换失败: ' + e.message);
+            }
+        }
+        
+        // 阿拉伯数字转中文的实现
+        function numberToChinese(num) {
+            const chineseNums = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            const chineseUnits = ['', '十', '百', '千'];
+            const chineseBigUnits = ['', '万', '亿', '兆'];
+            
+            if (num === '0') {
+                return '零';
+            }
+            
+            let result = '';
+            let strNum = num.toString();
+            let zeroFlag = false;
+            
+            // 处理整数部分
+            if (strNum.indexOf('.') === -1) {
+                // 没有小数点
+                result = convertIntegerPart(strNum, chineseNums, chineseUnits, chineseBigUnits);
+            } else {
+                // 有小数点
+                const integerPart = strNum.substring(0, strNum.indexOf('.'));
+                const decimalPart = strNum.substring(strNum.indexOf('.') + 1);
+                result = convertIntegerPart(integerPart, chineseNums, chineseUnits, chineseBigUnits);
+                result += '点';
+                for (let i = 0; i < decimalPart.length; i++) {
+                    result += chineseNums[parseInt(decimalPart[i])];
+                }
+            }
+            
+            return result;
+        }
+        
+        function convertIntegerPart(strNum, chineseNums, chineseUnits, chineseBigUnits) {
+            if (strNum === '0') {
+                return '零';
+            }
+            
+            let result = '';
+            let zeroFlag = false;
+            
+            // 按四位一组处理
+            const groups = [];
+            for (let i = strNum.length; i > 0; i -= 4) {
+                const start = Math.max(0, i - 4);
+                groups.push(strNum.substring(start, i));
+            }
+            
+            for (let i = 0; i < groups.length; i++) {
+                const group = groups[i];
+                let groupStr = '';
+                let zeroInGroup = false;
+                
+                for (let j = 0; j < group.length; j++) {
+                    const digit = parseInt(group[group.length - 1 - j]);
+                    if (digit !== 0) {
+                        if (zeroFlag && groupStr !== '') {
+                            groupStr = chineseNums[0] + groupStr;
+                        }
+                        groupStr = chineseNums[digit] + chineseUnits[j] + groupStr;
+                        zeroFlag = false;
+                        zeroInGroup = true;
+                    } else {
+                        zeroFlag = true;
+                    }
+                }
+                
+                if (groupStr !== '') {
+                    if (i > 0) {
+                        groupStr += chineseBigUnits[i];
+                    }
+                    result = groupStr + result;
+                } else if (i === 0) {
+                    result = chineseNums[0] + result;
+                }
+            }
+            
+            // 处理特殊情况，如10, 11-19等
+            if (result.startsWith('一十')) {
+                result = result.substring(1);
+            }
+            
+            return result;
+        }
+        
+        // 中文转阿拉伯数字的实现（简化版）
+        function chineseToNumber(chinese) {
+            // 这里提供一个简化的实现
+            return "功能开发中...";
+        }
+        
+        // 显示帮助信息
+        function showCalculatorHelp(type) {
+            alert('数字转换器帮助：\n\n1. 阿拉伯数字转中文：输入数字，转换为中文表示\n2. 中文转阿拉伯数字：输入中文数字，转换为阿拉伯数字\n3. 进制转换：在不同进制间转换数值');
+        }
+    </script>
+</body>
+</html>
