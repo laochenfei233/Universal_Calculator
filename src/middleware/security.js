@@ -1,5 +1,6 @@
-const { SECURITY } = require('../config/constants');
-const logger = require('../utils/logger');
+const constants = require('../config/constants');
+const SECURITY = constants.SECURITY;
+const { logger } = require('../utils/logger') || { logger: console }; // 回退到console
 
 /**
  * SQL注入防护中间件
@@ -11,9 +12,14 @@ const sqlInjectionProtection = (req, res, next) => {
     // 如果是纯数字字符串，直接返回false（不是SQL注入）
     if (/^\d+(\.\d+)?$/.test(value)) return false;
 
-    // 特定字段验证 - salary字段必须是数字
+    // 特定字段验证
     if (path.includes('salary') && !/^\d+$/.test(value)) {
       return true;
+    }
+    
+    // 允许特定字段包含特定值（如城市代码）
+    if (path.includes('city') && ['beijing', 'shanghai', 'guangzhou', 'shenzhen', 'national'].includes(value.toLowerCase())) {
+      return false;
     }
   
     const sqlInjectionPatterns = [
@@ -49,6 +55,14 @@ const sqlInjectionProtection = (req, res, next) => {
         return true;
       }
     }
+    
+    // 记录详细检查日志（仅开发环境）
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Security check passed for:', {
+        path,
+        value: value.toString().substring(0, 100)
+      });
+    }
     return false;
   };
 
@@ -72,6 +86,216 @@ const sqlInjectionProtection = (req, res, next) => {
   next();
 };
 
+/**
+ * XSS攻击防护中间件
+ */
+const xssProtection = (req, res, next) => {
+  const checkForXSS = (value) => {
+    if (typeof value !== 'string') return false;
+    
+    const xssPatterns = [
+      /<script\b[^>]*>(.*?)<\/script>/i,
+      /javascript:/i,
+      /on\w+\s*=/i,
+      /data:/i,
+      /vbscript:/i,
+      /expression\s*\(/i,
+      /<iframe\b[^>]*>(.*?)<\/iframe>/i,
+      /<object\b[^>]*>(.*?)<\/object>/i,
+      /<embed\b[^>]*>(.*?)<\/embed>/i,
+      /<applet\b[^>]*>(.*?)<\/applet>/i
+    ];
+
+    return xssPatterns.some(pattern => pattern.test(value));
+  };
+
+  const checkObject = (obj, path = '') => {
+    for (const [key, value] of Object.entries(obj)) {
+      const currentPath = path ? `${path}.${key}` : key;
+      
+      if (value && typeof value === 'object') {
+        if (checkObject(value, currentPath)) {
+          return true;
+        }
+      } else if (value && checkForXSS(value.toString())) {
+        logger.securityLog('XSS attempt', 'warn', {
+          path: currentPath,
+          value: value.toString().substring(0, 100),
+          ip: req.ip,
+          url: req.url
+        });
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const sources = [req.body, req.query, req.params];
+  for (const source of sources) {
+    if (source && typeof source === 'object' && checkObject(source)) {
+      res.setHeader('Content-Type', 'application/json');
+      return res.status(400).json({
+        success: false,
+        error: '请求包含可疑内容',
+        code: 'SECURITY_VIOLATION'
+      });
+    }
+  }
+
+  next();
+};
+
+/**
+ * 输入验证中间件
+ */
+const inputValidation = (req, res, next) => {
+  const { INPUT_VALIDATION } = SECURITY;
+
+  const validateObject = (obj, path = '') => {
+    for (const [key, value] of Object.entries(obj)) {
+      const currentPath = path ? `${path}.${key}` : key;
+      
+      if (value === null || value === undefined) {
+        continue;
+      }
+
+      // 验证字符串长度
+      if (typeof value === 'string' && value.length > INPUT_VALIDATION.MAX_STRING_LENGTH) {
+        return `字段 ${currentPath} 长度超过限制`;
+      }
+
+      // 验证数字范围
+      if (typeof value === 'number') {
+        if (value > INPUT_VALIDATION.MAX_NUMBER_VALUE) {
+          return `字段 ${currentPath} 数值过大`;
+        }
+        if (value < INPUT_VALIDATION.MIN_NUMBER_VALUE) {
+          return `字段 ${currentPath} 数值过小`;
+        }
+      }
+
+      // 验证数组长度
+      if (Array.isArray(value) && value.length > INPUT_VALIDATION.MAX_ARRAY_LENGTH) {
+        return `字段 ${currentPath} 数组长度超过限制`;
+      }
+
+      // 递归验证嵌套对象
+      if (typeof value === 'object' && !Array.isArray(value)) {
+        const depth = currentPath.split('.').length;
+        if (depth > INPUT_VALIDATION.MAX_OBJECT_DEPTH) {
+          return `字段 ${currentPath} 嵌套深度超过限制`;
+        }
+        
+        const nestedError = validateObject(value, currentPath);
+        if (nestedError) {
+          return nestedError;
+        }
+      }
+    }
+    return null;
+  };
+
+  const sources = [req.body, req.query, req.params];
+  for (const source of sources) {
+    if (source && typeof source === 'object') {
+      const error = validateObject(source);
+      if (error) {
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(400).json({
+          success: false,
+          error,
+          code: 'VALIDATION_ERROR'
+        });
+      }
+    }
+  }
+
+  next();
+};
+
+/**
+ * 安全头部中间件
+ */
+const securityHeaders = (req, res, next) => {
+  // 设置安全头部
+  Object.entries(SECURITY.SECURITY_HEADERS).forEach(([header, value]) => {
+    res.setHeader(header, value);
+  });
+
+  // 额外的安全措施
+  res.setHeader('X-Powered-By', 'Calculator API');
+  
+  // 防止点击劫持
+  res.setHeader('X-Frame-Options', 'DENY');
+  
+  // 防止MIME类型嗅探
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+
+  next();
+};
+
+/**
+ * CORS配置中间件
+ */
+const corsConfig = (req, res, next) => {
+  const { CORS } = SECURITY;
+  const origin = req.headers.origin;
+
+  // 检查来源是否允许
+  if (origin && CORS.ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  } else if (CORS.ALLOWED_ORIGINS.includes('*')) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+
+  // 处理预检请求
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Methods', CORS.ALLOWED_METHODS.join(','));
+    res.setHeader('Access-Control-Allow-Headers', CORS.ALLOWED_HEADERS.join(','));
+    res.setHeader('Access-Control-Max-Age', CORS.MAX_AGE);
+    return res.status(200).end();
+  }
+
+  next();
+};
+
+/**
+ * 速率限制增强中间件
+ */
+const enhancedRateLimit = (req, res, next) => {
+  const rateLimiter = require('./rateLimiter');
+  
+  // 防御性检查
+  const blacklist = constants?.SECURITY?.RATE_LIMIT?.BLACKLIST;
+  if (!Array.isArray(blacklist)) {
+    (logger?.error || console.error)('Invalid rate limit configuration - missing BLACKLIST');
+    return next();
+  }
+
+  // 检查IP黑名单
+  if (blacklist.includes(req.ip)) {
+    logger.securityLog('Blacklisted IP attempt', 'warn', {
+      ip: req.ip,
+      url: req.url
+    });
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(403).json({
+      success: false,
+      error: '访问被拒绝',
+      code: 'ACCESS_DENIED'
+    });
+  }
+
+  // 使用现有的速率限制器
+  rateLimiter(req, res, next);
+};
+
 module.exports = {
-  sqlInjectionProtection
+  sqlInjectionProtection,
+  xssProtection,
+  inputValidation,
+  securityHeaders,
+  corsConfig,
+  enhancedRateLimit
 };

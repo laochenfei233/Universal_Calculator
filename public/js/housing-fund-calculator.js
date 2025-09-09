@@ -25,6 +25,35 @@ function toggleRentField() {
     rentField.style.display = withdrawalType === 'rent' ? 'block' : 'none';
 }
 
+// 安全地格式化数字，避免调用undefined的toFixed方法
+function formatNumber(value, decimals = 2) {
+    if (value === undefined || value === null) {
+        return 'N/A';
+    }
+    return Number(value).toFixed(decimals);
+}
+
+// 安全地访问嵌套属性
+function getNestedProperty(obj, path, defaultValue = 'N/A') {
+    const keys = path.split('.');
+    let current = obj;
+    
+    for (let key of keys) {
+        if (current === null || current === undefined || typeof current !== 'object') {
+            return defaultValue;
+        }
+        current = current[key];
+    }
+    
+    return current !== undefined ? current : defaultValue;
+}
+
+// 安全地格式化嵌套属性中的数字
+function formatNestedNumber(obj, path, decimals = 2) {
+    const value = getNestedProperty(obj, path);
+    return formatNumber(value, decimals);
+}
+
 // 公积金缴费计算
 async function calculatePayment() {
     const salaryElement = document.getElementById('salary');
@@ -61,16 +90,18 @@ async function calculatePayment() {
         const result = await response.json();
         
         if (response.ok) {
+            // 从API响应中提取数据
+            const data = result.data;
             const resultDiv = document.getElementById('paymentResult');
             resultDiv.innerHTML = `
                 <h3>计算结果</h3>
-                <p><strong>缴费基数:</strong> ${result.base.toFixed(2)} 元</p>
-                <p><strong>个人缴费比例:</strong> ${result.personalRate.toFixed(2)}%</p>
-                <p><strong>单位缴费比例:</strong> ${result.employerRate.toFixed(2)}%</p>
-                <p><strong>个人月缴存额:</strong> ${result.personalAmount.toFixed(2)} 元</p>
-                <p><strong>单位月缴存额:</strong> ${result.employerAmount.toFixed(2)} 元</p>
-                <p><strong>月缴存总额:</strong> ${result.totalAmount.toFixed(2)} 元</p>
-                <p><strong>基数范围:</strong> ${result.limits.minBase.toFixed(2)} - ${result.limits.maxBase.toFixed(2)} 元</p>
+                <p><strong>缴费基数:</strong> ${formatNumber(data.base)} 元</p>
+                <p><strong>个人缴费比例:</strong> ${formatNumber(data.personalRate)}%</p>
+                <p><strong>单位缴费比例:</strong> ${formatNumber(data.employerRate)}%</p>
+                <p><strong>个人月缴存额:</strong> ${formatNumber(data.personalAmount)} 元</p>
+                <p><strong>单位月缴存额:</strong> ${formatNumber(data.employerAmount)} 元</p>
+                <p><strong>月缴存总额:</strong> ${formatNumber(data.totalAmount)} 元</p>
+                <p><strong>基数范围:</strong> ${formatNestedNumber(data, 'limits.minBase')} - ${formatNestedNumber(data, 'limits.maxBase')} 元</p>
             `;
             resultDiv.style.display = 'block';
         } else {
@@ -111,18 +142,20 @@ async function calculateAdjustment() {
         const result = await response.json();
         
         if (response.ok) {
+            // 从API响应中提取数据
+            const data = result.data;
             const resultDiv = document.getElementById('adjustmentResult');
             resultDiv.innerHTML = `
                 <h3>计算结果</h3>
-                <p><strong>当前基数:</strong> ${result.currentBase.toFixed(2)} 元</p>
-                <p><strong>推荐基数:</strong> ${result.recommendedBase.toFixed(2)} 元</p>
-                <p><strong>当前月缴存额:</strong> ${result.currentMonthlyPayment.toFixed(2)} 元</p>
-                <p><strong>调整后月缴存额:</strong> ${result.newMonthlyPayment.toFixed(2)} 元</p>
-                <p><strong>月缴存额变化:</strong> ${result.monthlyDifference.toFixed(2)} 元</p>
-                <p><strong>年缴存额变化:</strong> ${result.annualDifference.toFixed(2)} 元</p>
-                <p><strong>缴费比例:</strong> ${result.rate.toFixed(2)}%</p>
-                <p><strong>基数范围:</strong> ${result.limits.minBase.toFixed(2)} - ${result.limits.maxBase.toFixed(2)} 元</p>
-                <p><strong>社会平均工资基数范围:</strong> ${result.averageSalaryLimits.minBase.toFixed(2)} - ${result.averageSalaryLimits.maxBase.toFixed(2)} 元</p>
+                <p><strong>当前基数:</strong> ${formatNumber(data.currentBase)} 元</p>
+                <p><strong>推荐基数:</strong> ${formatNumber(data.recommendedBase)} 元</p>
+                <p><strong>当前月缴存额:</strong> ${formatNumber(data.currentMonthlyPayment)} 元</p>
+                <p><strong>调整后月缴存额:</strong> ${formatNumber(data.newMonthlyPayment)} 元</p>
+                <p><strong>月缴存额变化:</strong> ${formatNumber(data.monthlyDifference)} 元</p>
+                <p><strong>年缴存额变化:</strong> ${formatNumber(data.annualDifference)} 元</p>
+                <p><strong>缴费比例:</strong> ${formatNumber(data.rate)}%</p>
+                <p><strong>基数范围:</strong> ${formatNestedNumber(data, 'limits.minBase')} - ${formatNestedNumber(data, 'limits.maxBase')} 元</p>
+                <p><strong>社会平均工资基数范围:</strong> ${formatNestedNumber(data, 'averageSalaryLimits.minBase')} - ${formatNestedNumber(data, 'averageSalaryLimits.maxBase')} 元</p>
             `;
             resultDiv.style.display = 'block';
         } else {
@@ -165,16 +198,18 @@ async function calculateLoan() {
         const result = await response.json();
         
         if (response.ok) {
+            // 从API响应中提取数据
+            const data = result.data;
             const resultDiv = document.getElementById('loanResult');
             resultDiv.innerHTML = `
                 <h3>计算结果</h3>
-                <p><strong>可贷款额度:</strong> ${result.loanLimit.toFixed(2)} 元</p>
-                <p><strong>基于账户余额计算的额度:</strong> ${result.balanceBasedLimit.toFixed(2)} 元</p>
-                <p><strong>基于缴费基数计算的额度:</strong> ${result.baseBasedLimit.toFixed(2)} 元</p>
-                <p><strong>基于还款能力计算的额度:</strong> ${result.incomeBasedLimit.toFixed(2)} 元</p>
-                <p><strong>最大月供:</strong> ${result.maxMonthlyPayment.toFixed(2)} 元</p>
-                <p><strong>贷款年限:</strong> ${result.years} 年</p>
-                <p><strong>贷款利率:</strong> ${result.rate.toFixed(2)}%</p>
+                <p><strong>可贷款额度:</strong> ${formatNumber(data.loanLimit)} 元</p>
+                <p><strong>基于账户余额计算的额度:</strong> ${formatNumber(data.balanceBasedLimit)} 元</p>
+                <p><strong>基于缴费基数计算的额度:</strong> ${formatNumber(data.baseBasedLimit)} 元</p>
+                <p><strong>基于还款能力计算的额度:</strong> ${formatNumber(data.incomeBasedLimit)} 元</p>
+                <p><strong>最大月供:</strong> ${formatNumber(data.maxMonthlyPayment)} 元</p>
+                <p><strong>贷款年限:</strong> ${data.years} 年</p>
+                <p><strong>贷款利率:</strong> ${formatNumber(data.rate * 100)}%</p>
             `;
             resultDiv.style.display = 'block';
         } else {
@@ -224,15 +259,17 @@ async function calculateWithdrawal() {
         const result = await response.json();
         
         if (response.ok) {
+            // 从API响应中提取数据
+            const data = result.data;
             const resultDiv = document.getElementById('withdrawalResult');
             resultDiv.innerHTML = `
                 <h3>计算结果</h3>
-                <p><strong>可提取额度:</strong> ${result.withdrawalLimit.toFixed(2)} 元</p>
-                <p><strong>账户余额:</strong> ${result.balance.toFixed(2)} 元</p>
-                <p><strong>提取类型:</strong> ${result.withdrawalType === 'rent' ? '租房提取' : 
-                                              result.withdrawalType === 'medical' ? '医疗提取' : 
-                                              result.withdrawalType === 'education' ? '教育提取' : '其他提取'}</p>
-                <p><strong>说明:</strong> ${result.reason}</p>
+                <p><strong>可提取额度:</strong> ${formatNumber(data.withdrawalLimit)} 元</p>
+                <p><strong>账户余额:</strong> ${formatNumber(data.balance)} 元</p>
+                <p><strong>提取类型:</strong> ${data.withdrawalType === 'rent' ? '租房提取' : 
+                                              data.withdrawalType === 'medical' ? '医疗提取' : 
+                                              data.withdrawalType === 'education' ? '教育提取' : '其他提取'}</p>
+                <p><strong>说明:</strong> ${data.reason}</p>
             `;
             resultDiv.style.display = 'block';
         } else {
