@@ -44,12 +44,16 @@ router.post('/calculate', asyncHandler(async (req, res) => {
   }
 
   try {
+    console.log('公积金计算请求参数:', { salary, base, rate, city });
+    
     const result = HousingFundCalculator.calculateHousingFund({
       salary,
       base,
       rate,
       city
     });
+
+    console.log('公积金计算结果:', result);
 
     // 添加优化建议
     result.suggestions = HousingFundCalculator.getOptimizationSuggestions({
@@ -63,6 +67,11 @@ router.post('/calculate', asyncHandler(async (req, res) => {
 
     ResponseUtil.success(res, result, '公积金缴费计算完成');
   } catch (error) {
+    console.error('公积金计算错误:', {
+      message: error.message,
+      stack: error.stack,
+      input: { salary, base, rate, city }
+    });
     ResponseUtil.calculationError(res, '公积金缴费计算失败', error.message);
   }
 }));
