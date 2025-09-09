@@ -18,23 +18,28 @@ const errorHandler = (err, req, res, next) => {
   const errorId = uuidv4 ? uuidv4() : Date.now().toString(36) + Math.random().toString(36).substr(2);
   const timestamp = new Date().toISOString();
   
+  // 确保错误对象有message属性
+  const errorMessage = err.message || '未知错误';
+  const errorStack = err.stack || '无堆栈信息';
+  
   // 记录错误日志（添加防御性检查）
   if (logger && typeof logger.error === 'function') {
     logger.error('Error occurred:', {
       errorId,
-      message: err.message,
-      stack: err.stack,
+      message: errorMessage,
+      stack: errorStack,
       url: req.url,
       method: req.method,
       ip: req.ip,
-      userAgent: req.get('User-Agent'),
+      userAgent: req.headers && req.headers['user-agent'],
       timestamp
     });
   } else {
     console.error('Error occurred:', {
       errorId,
-      message: err.message,
-      url: req.url
+      message: errorMessage,
+      url: req.url,
+      stack: errorStack
     });
   }
 
@@ -107,12 +112,21 @@ const errorHandler = (err, req, res, next) => {
     err.message = '未知错误';
   }
 
-  // 处理HTML错误响应
-  if (typeof err === 'string' && err.startsWith('<!DOCTYPE')) {
-    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+  // 处理各种错误响应格式
+  if (typeof err === 'string') {
+    if (err.startsWith('<!DOCTYPE')) {
+      return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        error: '服务器内部错误',
+        code: ERROR_TYPES.INTERNAL_ERROR,
+        errorId,
+        timestamp
+      });
+    }
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({
       success: false,
-      error: '服务器内部错误',
-      code: ERROR_TYPES.INTERNAL_ERROR,
+      error: err,
+      code: ERROR_TYPES.VALIDATION_ERROR,
       errorId,
       timestamp
     });
