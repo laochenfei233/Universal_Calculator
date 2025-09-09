@@ -1,13 +1,6 @@
-const fs = require('fs');
-const path = require('path');
 const { createLogger, format, transports } = require('winston');
-const DailyRotateFile = require('winston-daily-rotate-file');
-
-// 确保日志目录存在
-const logDir = path.join(__dirname, '../../logs');
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir, { recursive: true });
-}
+const path = require('path');
+const fs = require('fs');
 
 // 自定义日志格式
 const customFormat = format.combine(
@@ -16,7 +9,7 @@ const customFormat = format.combine(
   format.json()
 );
 
-// 控制台输出格式（开发环境）
+// 控制台输出格式
 const consoleFormat = format.combine(
   format.colorize(),
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
@@ -25,53 +18,53 @@ const consoleFormat = format.combine(
   })
 );
 
+// 检查是否在Vercel环境中运行
+const isVercel = process.env.VERCEL === '1';
+
 // 创建logger实例
 const logger = createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: customFormat,
   defaultMeta: { service: 'calculator-api' },
   transports: [
-    // 错误日志文件（按天轮转）
-    new DailyRotateFile({
-      filename: path.join(logDir, 'error-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      level: 'error',
-      maxSize: '20m',
-      maxFiles: '30d'
-    }),
-    
-    // 所有日志文件（按天轮转）
-    new DailyRotateFile({
-      filename: path.join(logDir, 'combined-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '20m',
-      maxFiles: '30d'
-    }),
-    
-    // 审计日志（专门记录重要操作）
-    new DailyRotateFile({
-      filename: path.join(logDir, 'audit-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      level: 'info',
-      maxSize: '10m',
-      maxFiles: '90d'
+    // 始终添加控制台输出
+    new transports.Console({
+      format: consoleFormat
     })
   ]
 });
 
-// 开发环境添加控制台输出
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new transports.Console({
-    format: consoleFormat
-  }));
+// 只在非Vercel环境中添加文件日志
+if (!isVercel) {
+  // 确保日志目录存在
+  const logDir = path.join(__dirname, '../../logs');
+  try {
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+    
+    // 添加文件日志
+    logger.add(new transports.File({
+      filename: path.join(logDir, 'error.log'),
+      level: 'error',
+      maxsize: 5242880, // 5MB
+      maxFiles: 5
+    }));
+    
+    logger.add(new transports.File({
+      filename: path.join(logDir, 'combined.log'),
+      maxsize: 5242880, // 5MB
+      maxFiles: 5
+    }));
+  } catch (error) {
+    console.error('无法创建日志文件:', error);
+  }
 }
 
-// 生产环境添加错误告警
-if (process.env.NODE_ENV === 'production') {
-  logger.on('error', (error) => {
-    console.error('Logger error:', error);
-  });
-}
+// 添加错误告警
+logger.on('error', (error) => {
+  console.error('Logger error:', error);
+});
 
 // 辅助函数：生成错误ID
 function generateErrorId() {
