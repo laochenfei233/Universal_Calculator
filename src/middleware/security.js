@@ -5,32 +5,34 @@ const logger = require('../utils/logger');
  * SQL注入防护中间件
  */
 const sqlInjectionProtection = (req, res, next) => {
-  const checkForSQLInjection = (value) => {
-    if (typeof value !== 'string') return false;
+  // 如果是纯数字字符串，直接返回false（不是SQL注入）
+  if (/^\d+(\.\d+)?$/.test(value)) return false;
+    const checkForSQLInjection = (value) => {
+      if (typeof value !== 'string') return false;
     
-    const sqlInjectionPatterns = [
-      /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|EXEC|ALTER|CREATE|TRUNCATE)\b)/i,
-      /(\b(OR|AND)\s+['"]?\d+['"]?\s*[=<>])/i,
-      /(--|#|\\*)/, // SQL注释
-      /(;|\|\||&&)/, // 命令分隔符
-      /(\b(WAITFOR|DELAY)\b)/i,
-      /(\b(XP_|SP_|MS_)\w+)/i, // SQL Server扩展存储过程
-      /(\b(LOAD_FILE|INTO\s+OUTFILE|INTO\s+DUMPFILE)\b)/i
-    ];
+      const sqlInjectionPatterns = [
+        /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|EXEC|ALTER|CREATE|TRUNCATE)\b)/i,
+        /(\b(OR|AND)\s+['"]?\d+['"]?\s*[=<>])/i,
+        /(--|#|\\*)/, // SQL注释
+        /(;|\|\||&&)/, // 命令分隔符
+        /(\b(WAITFOR|DELAY)\b)/i,
+        /(\b(XP_|SP_|MS_)\w+)/i, // SQL Server扩展存储过程
+        /(\b(LOAD_FILE|INTO\s+OUTFILE|INTO\s+DUMPFILE)\b)/i
+      ];
 
-    return sqlInjectionPatterns.some(pattern => pattern.test(value));
-  };
+      return sqlInjectionPatterns.some(pattern => pattern.test(value));
+    };
 
-  const checkObject = (obj, path = '') => {
-    for (const [key, value] of Object.entries(obj)) {
-      const currentPath = path ? `${path}.${key}` : key;
+    const checkObject = (obj, path = '') => {
+      for (const [key, value] of Object.entries(obj)) {
+        const currentPath = path ? `${path}.${key}` : key;
       
-      if (value && typeof value === 'object') {
-        if (checkObject(value, currentPath)) {
-          return true;
-        }
-      } else if (value && checkForSQLInjection(value.toString())) {
-        logger.securityLog('SQL injection attempt', 'warn', {
+        if (value && typeof value === 'object') {
+          if (checkObject(value, currentPath)) {
+            return true;
+          }
+        } else if (value && checkForSQLInjection(value.toString())) {
+          logger.securityLog('SQL injection attempt', 'warn', {
           path: currentPath,
           value: value.toString().substring(0, 100),
           ip: req.ip,
