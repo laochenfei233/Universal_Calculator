@@ -16,6 +16,11 @@ class HousingFundCalculator {
    * @returns {Object} 计算结果
    */
   static calculateHousingFund(params) {
+    // 参数验证
+    if (!params || typeof params !== 'object') {
+      throw new Error('参数必须是一个对象');
+    }
+
     const {
       salary,
       base = 0,
@@ -23,24 +28,43 @@ class HousingFundCalculator {
       city = 'national'
     } = params;
 
+    // 验证必填参数
+    if (salary === undefined || salary === null) {
+      throw new Error('工资(salary)是必填参数');
+    }
+
     // 获取城市公积金限额配置
     const limits = taxConfig.getSocialInsuranceLimits(city);
     const housingFundConfig = limits.housingFund;
     
+    // 验证配置
+    if (!housingFundConfig || !housingFundConfig.minBase || !housingFundConfig.maxBase || !housingFundConfig.rate) {
+      throw new Error(`获取${city}公积金配置失败`);
+    }
+
     // 如果没有指定基数，则根据工资自动计算基数
-    const actualBase = base > 0 ? base : this.calculateBase(salary, housingFundConfig);
+    const actualBase = base > 0 ? 
+      Math.min(Math.max(base, housingFundConfig.minBase), housingFundConfig.maxBase) : 
+      this.calculateBase(salary, housingFundConfig);
     
     // 如果没有指定比例，则使用默认比例
-    const actualRate = rate > 0 ? rate : housingFundConfig.rate;
+    const actualRate = rate > 0 ? 
+      Math.min(Math.max(rate, 0.05), 0.24) : // 比例范围5%-24%
+      housingFundConfig.rate;
     
-    // 计算个人缴费金额
-    const personalAmount = Math.round(actualBase * actualRate * 100) / 100;
+    // 计算个人缴费金额（精确到分）
+    const personalAmount = parseFloat((actualBase * actualRate).toFixed(2));
     
     // 计算单位缴费金额（通常与个人相同或更高）
-    const employerAmount = Math.round(actualBase * actualRate * 100) / 100;
+    const employerAmount = parseFloat((actualBase * actualRate).toFixed(2));
     
     // 计算总缴费金额
-    const totalAmount = personalAmount + employerAmount;
+    const totalAmount = parseFloat((personalAmount + employerAmount).toFixed(2));
+    
+    // 验证计算结果
+    if (isNaN(personalAmount) || isNaN(employerAmount) || isNaN(totalAmount)) {
+      throw new Error('计算结果无效');
+    }
     
     return {
       base: actualBase,
@@ -64,8 +88,24 @@ class HousingFundCalculator {
    * @returns {number} 缴费基数
    */
   static calculateBase(salary, config) {
+    // 参数验证
+    if (salary === undefined || salary === null || isNaN(salary)) {
+      throw new Error('工资(salary)必须是有效数字');
+    }
+    
+    if (!config || !config.minBase || !config.maxBase) {
+      throw new Error('公积金配置无效');
+    }
+
     // 基数不能低于最低基数，不能高于最高基数
-    return Math.min(Math.max(salary, config.minBase), config.maxBase);
+    const base = Math.min(Math.max(salary, config.minBase), config.maxBase);
+    
+    // 验证计算结果
+    if (isNaN(base)) {
+      throw new Error('基数计算失败');
+    }
+    
+    return base;
   }
 
   /**
