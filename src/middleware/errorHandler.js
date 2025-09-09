@@ -103,14 +103,9 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // 默认服务器错误处理
-  const errorMessage = process.env.NODE_ENV === 'production' 
+  const displayErrorMessage = process.env.NODE_ENV === 'production' 
     ? '服务器内部错误，请联系管理员' 
-    : err.message;
-
-  // 确保错误对象有message属性
-  if (!err.message) {
-    err.message = '未知错误';
-  }
+    : err.message || '未知错误';
 
   // 处理各种错误响应格式
   if (typeof err === 'string') {
@@ -134,7 +129,7 @@ const errorHandler = (err, req, res, next) => {
 
   return ResponseUtil.error(
     res,
-    errorMessage,
+    displayErrorMessage,
     ERROR_TYPES.INTERNAL_ERROR,
     HTTP_STATUS.INTERNAL_SERVER_ERROR,
     { 
