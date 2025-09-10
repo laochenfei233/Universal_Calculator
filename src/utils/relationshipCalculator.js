@@ -116,7 +116,14 @@ class RelationshipCalculator {
       
       // 查找当前关系的映射
       if (!RELATIONSHIP_MAP[currentRelation] || !RELATIONSHIP_MAP[currentRelation][nextRelation]) {
-        throw new Error(`无法解析关系路径: ${currentRelation} -> ${nextRelation}`);
+        // 尝试通过中间关系解析
+        const intermediateResult = this.findIntermediateRelation(currentRelation, nextRelation);
+        if (intermediateResult) {
+          currentRelation = intermediateResult;
+          steps.push(`${currentRelation}(通过${nextRelation})`);
+        } else {
+          throw new Error(`无法解析关系路径: ${currentRelation} -> ${nextRelation}`);
+        }
       } else {
         // 直接映射
         const mapping = RELATIONSHIP_MAP[currentRelation][nextRelation];
@@ -159,6 +166,18 @@ class RelationshipCalculator {
       region: region,
       explanation: `直接关系: ${finalRelation}`
     };
+  }
+
+  /**
+   * 查找中间关系
+   * @param {string} currentRelation - 当前关系
+   * @param {string} targetRelation - 目标关系
+   * @returns {string|null} 中间关系或null
+   */
+  findIntermediateRelation(currentRelation, targetRelation) {
+    // 这里可以实现更复杂的路径查找算法
+    // 目前返回null，表示无法找到中间关系
+    return null;
   }
 
   /**

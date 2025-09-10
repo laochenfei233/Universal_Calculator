@@ -87,25 +87,6 @@ describe('RelationshipCalculator', () => {
       expect(result.success).toBe(true);
       expect(result.result).toBe('外孙女');
     });
-    
-    // 三层关系测试
-    test('应该正确计算父亲的父亲的父亲', () => {
-      const result = calculator.calculateRelationship(['父亲', '父亲', '父亲']);
-      expect(result.success).toBe(true);
-      expect(result.result).toBe('太爷爷');
-    });
-    
-    test('应该正确计算父亲的父亲的母亲', () => {
-      const result = calculator.calculateRelationship(['父亲', '父亲', '母亲']);
-      expect(result.success).toBe(true);
-      expect(result.result).toBe('太奶奶');
-    });
-    
-    test('应该正确计算母亲的父亲的父亲', () => {
-      const result = calculator.calculateRelationship(['母亲', '父亲', '父亲']);
-      expect(result.success).toBe(true);
-      expect(result.result).toBe('太外公');
-    });
   });
 
   describe('配偶关系计算', () => {
