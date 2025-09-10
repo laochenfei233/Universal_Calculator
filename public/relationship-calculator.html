@@ -587,74 +587,284 @@
         
         // 称呼计算实现
         function calculateRelationshipResult(gender, relationshipChain, mutualCheck = false) {
-            // 这里应该有一个复杂的算法来计算称呼
-            // 为了演示，我们使用一个简化的版本
-            
             // 如果是互查模式，我们需要反转关系链并计算
             if (mutualCheck) {
-                // 互查模式下的称呼结果
-                const mutualResults = [
-                    "孩子", "父母", "兄弟", "姐妹", 
-                    "侄子", "侄女", "外甥", "外甥女", "爷爷",
-                    "奶奶", "外公", "外婆", "叔叔", "阿姨",
-                    "表兄弟", "表姐妹"
-                ];
-                
-                // 根据选择的关系链长度和内容计算结果
-                let index = 0;
-                relationshipChain.forEach(rel => {
-                    if (rel) {
-                        // 简单的哈希算法
-                        for (let i = 0; i < rel.length; i++) {
-                            index += rel.charCodeAt(i);
-                        }
-                    }
-                });
-                
-                return mutualResults[index % mutualResults.length];
+                return calculateMutualRelationship(gender, [...relationshipChain].reverse());
             }
             
-            // 正常模式下的称呼结果
-            const maleResults = [
-                "爷爷", "奶奶", "伯伯", "叔叔", "姑姑", 
-                "堂哥", "堂弟", "堂姐", "堂妹", "表哥",
-                "表弟", "表姐", "表妹", "舅舅", "姨妈",
-                "侄子", "侄女", "外甥", "外甥女", "岳父",
-                "岳母", "公公", "婆婆", "爸爸", "妈妈",
-                "哥哥", "弟弟", "姐姐", "妹妹", "儿子",
-                "女儿", "外公", "外婆", "舅妈", "表兄",
-                "表弟", "表姐", "表妹"
-            ];
+            // 正常模式下的称呼计算
+            return calculateDirectRelationship(gender, relationshipChain);
+        }
+        
+        // 直接关系计算
+        function calculateDirectRelationship(gender, relationshipChain) {
+            if (relationshipChain.length === 0) return "";
             
-            const femaleResults = [
-                "爷爷", "奶奶", "伯伯", "叔叔", "姑姑", 
-                "堂哥", "堂弟", "堂姐", "堂妹", "表哥",
-                "表弟", "表姐", "表妹", "舅舅", "姨妈",
-                "侄子", "侄女", "外甥", "外甥女", "岳父",
-                "岳母", "公公", "婆婆", "爸爸", "妈妈",
-                "哥哥", "弟弟", "姐姐", "妹妹", "儿子",
-                "女儿", "外公", "外婆", "舅妈", "表兄",
-                "表弟", "表姐", "表妹"
-            ];
+            // 定义关系映射
+            const relationshipMap = {
+                // 父母辈
+                "father": { male: "爸爸", female: "爸爸" },
+                "mother": { male: "妈妈", female: "妈妈" },
+                "grandfather": { male: "爷爷", female: "爷爷" },
+                "grandmother": { male: "奶奶", female: "奶奶" },
+                "maternal_grandfather": { male: "外公", female: "外公" },
+                "maternal_grandmother": { male: "外婆", female: "外婆" },
+                
+                // 同辈
+                "elder_brother": { male: "哥哥", female: "哥哥" },
+                "younger_brother": { male: "弟弟", female: "弟弟" },
+                "elder_sister": { male: "姐姐", female: "姐姐" },
+                "younger_sister": { male: "妹妹", female: "妹妹" },
+                "spouse": { male: "老婆", female: "老公" },
+                "husband": { male: "老婆", female: "老公" },
+                "wife": { male: "老婆", female: "老公" },
+                
+                // 晚辈
+                "son": { male: "儿子", female: "儿子" },
+                "daughter": { male: "女儿", female: "女儿" },
+                
+                // 叔伯辈
+                "uncle": { male: "叔叔", female: "叔叔" },
+                "aunt": { male: "阿姨", female: "阿姨" },
+                
+                // 表堂兄弟姐妹
+                "cousin_male": { male: "表兄弟", female: "表兄弟" },
+                "cousin_female": { male: "表姐妹", female: "表姐妹" }
+            };
             
-            // 根据选择的关系链长度和内容计算结果
-            let index = 0;
-            relationshipChain.forEach(rel => {
-                if (rel) {
-                    // 简单的哈希算法
-                    for (let i = 0; i < rel.length; i++) {
-                        index += rel.charCodeAt(i);
-                    }
+            // 如果只有一层关系，直接返回对应称呼
+            if (relationshipChain.length === 1) {
+                const rel = relationshipChain[0];
+                return relationshipMap[rel] ? relationshipMap[rel][gender] : "未知关系";
+            }
+            
+            // 复杂关系链计算
+            let result = calculateComplexRelationship(gender, relationshipChain, relationshipMap);
+            return result;
+        }
+        
+        // 复杂关系链计算
+        function calculateComplexRelationship(gender, relationshipChain, relationshipMap) {
+            // 定义关系转换规则
+            const relationRules = {
+                // 爷爷的关系
+                "grandfather": {
+                    "father": "曾祖父",       // 爷爷的爸爸
+                    "mother": "曾祖母",       // 爷爷的妈妈
+                    "son": "爸爸",           // 爷爷的儿子
+                    "daughter": "姑姑",       // 爷爷的女儿
+                    "elder_brother": "曾祖父", // 爷爷的哥哥
+                    "younger_brother": "曾祖父", // 爷爷的弟弟
+                    "elder_sister": "曾祖母",   // 爷爷的姐姐
+                    "younger_sister": "曾祖母", // 爷爷的妹妹
+                    "uncle": "曾祖父",       // 爷爷的叔叔
+                    "aunt": "曾祖母",        // 爷爷的阿姨
+                    "grandfather": "曾祖父",   // 爷爷的爷爷
+                    "grandmother": "曾祖母",   // 爷爷的奶奶
+                    "maternal_grandfather": "曾外祖父", // 爷爷的外公
+                    "maternal_grandmother": "曾外祖母"  // 爷爷的外婆
+                },
+                // 奶奶的关系
+                "grandmother": {
+                    "father": "曾祖父",
+                    "mother": "曾祖母",
+                    "son": "爸爸",
+                    "daughter": "姑姑",
+                    "elder_brother": "曾祖父",
+                    "younger_brother": "曾祖父",
+                    "elder_sister": "曾祖母",
+                    "younger_sister": "曾祖母",
+                    "uncle": "曾祖父",
+                    "aunt": "曾祖母",
+                    "grandfather": "曾祖父",
+                    "grandmother": "曾祖母",
+                    "maternal_grandfather": "曾外祖父",
+                    "maternal_grandmother": "曾外祖母"
+                },
+                // 外公的关系
+                "maternal_grandfather": {
+                    "father": "曾外祖父",
+                    "mother": "曾外祖母",
+                    "son": "妈妈",
+                    "daughter": "姨妈",
+                    "elder_brother": "曾外祖父",
+                    "younger_brother": "曾外祖父",
+                    "elder_sister": "曾外祖母",
+                    "younger_sister": "曾外祖母",
+                    "uncle": "曾外祖父",
+                    "aunt": "曾外祖母",
+                    "grandfather": "曾外祖父",
+                    "grandmother": "曾外祖母",
+                    "maternal_grandfather": "曾外祖父",
+                    "maternal_grandmother": "曾外祖母"
+                },
+                // 外婆的关系
+                "maternal_grandmother": {
+                    "father": "曾外祖父",
+                    "mother": "曾外祖母",
+                    "son": "妈妈",
+                    "daughter": "姨妈",
+                    "elder_brother": "曾外祖父",
+                    "younger_brother": "曾外祖父",
+                    "elder_sister": "曾外祖母",
+                    "younger_sister": "曾外祖母",
+                    "uncle": "曾外祖父",
+                    "aunt": "曾外祖母",
+                    "grandfather": "曾外祖父",
+                    "grandmother": "曾外祖母",
+                    "maternal_grandfather": "曾外祖父",
+                    "maternal_grandmother": "曾外祖母"
+                },
+                // 爸爸的关系
+                "father": {
+                    "father": "爷爷",
+                    "mother": "奶奶",
+                    "son": "兄弟",
+                    "daughter": "姐妹",
+                    "elder_brother": "爷爷",
+                    "younger_brother": "爷爷",
+                    "elder_sister": "奶奶",
+                    "younger_sister": "奶奶",
+                    "uncle": "爷爷",
+                    "aunt": "奶奶",
+                    "grandfather": "曾祖父",
+                    "grandmother": "曾祖母",
+                    "maternal_grandfather": "外曾祖父",
+                    "maternal_grandmother": "外曾祖母"
+                },
+                // 妈妈的关系
+                "mother": {
+                    "father": "外公",
+                    "mother": "外婆",
+                    "son": "兄弟",
+                    "daughter": "姐妹",
+                    "elder_brother": "舅舅",
+                    "younger_brother": "舅舅",
+                    "elder_sister": "阿姨",
+                    "younger_sister": "阿姨",
+                    "uncle": "外公",
+                    "aunt": "外婆",
+                    "grandfather": "外曾祖父",
+                    "grandmother": "外曾祖母",
+                    "maternal_grandfather": "外曾祖父",
+                    "maternal_grandmother": "外曾祖母"
+                },
+                // 叔叔的关系
+                "uncle": {
+                    "father": "爷爷",
+                    "mother": "奶奶",
+                    "son": "堂兄弟",
+                    "daughter": "堂姐妹",
+                    "elder_brother": "爷爷",
+                    "younger_brother": "爷爷",
+                    "elder_sister": "奶奶",
+                    "younger_sister": "奶奶",
+                    "uncle": "爷爷",
+                    "aunt": "奶奶",
+                    "grandfather": "曾祖父",
+                    "grandmother": "曾祖母",
+                    "maternal_grandfather": "外曾祖父",
+                    "maternal_grandmother": "外曾祖母"
+                },
+                // 阿姨的关系
+                "aunt": {
+                    "father": "外公",
+                    "mother": "外婆",
+                    "son": "表兄弟",
+                    "daughter": "表姐妹",
+                    "elder_brother": "舅舅",
+                    "younger_brother": "舅舅",
+                    "elder_sister": "阿姨",
+                    "younger_sister": "阿姨",
+                    "uncle": "外公",
+                    "aunt": "外婆",
+                    "grandfather": "外曾祖父",
+                    "grandmother": "外曾祖母",
+                    "maternal_grandfather": "外曾祖父",
+                    "maternal_grandmother": "外曾祖母"
                 }
-            });
+            };
             
-            const results = gender === 'male' ? maleResults : femaleResults;
-            return results[index % results.length];
+            // 从第一个关系开始逐步计算
+            let currentRelation = relationshipChain[0];
+            
+            // 如果第一个关系不在映射中，返回未知关系
+            if (!relationshipMap[currentRelation]) {
+                return "未知关系";
+            }
+            
+            // 逐步处理关系链
+            for (let i = 1; i < relationshipChain.length; i++) {
+                const nextRelation = relationshipChain[i];
+                
+                // 检查是否有定义的转换规则
+                if (relationRules[currentRelation] && relationRules[currentRelation][nextRelation]) {
+                    currentRelation = relationRules[currentRelation][nextRelation];
+                } else {
+                    // 如果没有明确规则，使用默认规则
+                    currentRelation = "亲戚";
+                    break;
+                }
+            }
+            
+            // 如果最终结果是基础关系，返回对应的称呼
+            if (relationshipMap[currentRelation]) {
+                return relationshipMap[currentRelation][gender];
+            }
+            
+            // 否则返回计算出的关系名称
+            return currentRelation;
+        }
+        
+        // 互查关系计算（从对方角度看你的称呼）
+        function calculateMutualRelationship(gender, relationshipChain) {
+            if (relationshipChain.length === 0) return "";
+            
+            // 定义互查关系映射
+            const mutualMap = {
+                // 父母辈对子女的称呼
+                "father": { male: "儿子", female: "女儿" },
+                "mother": { male: "儿子", female: "女儿" },
+                "grandfather": { male: "孙子", female: "孙女" },
+                "grandmother": { male: "孙子", female: "孙女" },
+                "maternal_grandfather": { male: "外孙", female: "外孙女" },
+                "maternal_grandmother": { male: "外孙", female: "外孙女" },
+                
+                // 同辈
+                "elder_brother": { male: "兄弟", female: "姐妹" },
+                "younger_brother": { male: "兄弟", female: "姐妹" },
+                "elder_sister": { male: "兄弟", female: "姐妹" },
+                "younger_sister": { male: "兄弟", female: "姐妹" },
+                "husband": { male: "老婆", female: "老公" },
+                "wife": { male: "老婆", female: "老公" },
+                
+                // 晚辈对长辈的称呼
+                "son": { male: "爸爸", female: "妈妈" },
+                "daughter": { male: "爸爸", female: "妈妈" },
+                
+                // 叔伯辈对晚辈的称呼
+                "uncle": { male: "侄子", female: "侄女" },
+                "aunt": { male: "侄子", female: "侄女" },
+                
+                // 表堂兄弟姐妹
+                "cousin_male": { male: "表兄弟", female: "表姐妹" },
+                "cousin_female": { male: "表兄弟", female: "表姐妹" }
+            };
+            
+            // 如果只有一层关系，直接返回对应称呼
+            if (relationshipChain.length === 1) {
+                const rel = relationshipChain[0];
+                return mutualMap[rel] ? mutualMap[rel][gender] : "未知关系";
+            }
+            
+            // 复杂关系链的互查计算
+            let result = calculateComplexRelationship(gender, relationshipChain, mutualMap);
+            return result || "亲戚";
         }
         
         // 显示帮助信息
         function showCalculatorHelp(type) {
-            alert('称呼计算器帮助：\n\n1. 选择您的性别\n2. 通过点击按钮构建关系链，最多可添加五层关系\n3. 可以使用"撤销上步"或"清空所有"按钮来修改关系链\n4. 点击"互查模式"按钮可切换到互查模式，查看对方对您的称呼\n5. 点击"计算称呼"按钮查看结果');
+            alert('称呼计算器帮助：\n\n1. 选择您的性别\n2. 通过点击按钮构建关系链，最多可添加五层关系\n3. 可以使用"撤销上步"或"清空所有"按钮来修改关系链\n4. 点击"互查模式"按钮可切换到互查模式，查看对方对您的称呼\n5. 点击"计算称呼"按钮查看结果\n\n示例：\n- "爸爸的爸爸" = "爷爷"\n- "妈妈的妈妈" = "外婆"\n- "爸爸的兄弟" = "叔叔"\n- "妈妈的兄弟" = "舅舅"');
         }
     </script>
 </body>
